@@ -8,7 +8,7 @@ function App() {
 
   return (
     <>
-      <div style={{ gap: '1rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
