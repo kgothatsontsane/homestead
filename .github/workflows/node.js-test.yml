@@ -31,6 +31,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-        run: pnpm run builld
-        run: pnpm test
+        pnpm run builld
+        pnpm test
         
