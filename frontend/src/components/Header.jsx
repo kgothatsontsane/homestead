@@ -13,7 +13,7 @@ const Header = () => {
                       <span className='font-[900] text-[24px]'>Home<span className='font-[600] text-[24px]'>stead</span></span>
                 </Link>
                 {/* Navigation bar */}
-                <div className="">
+                <div className="flexCenter gap-x-4">
                     {/* Desktop */}
                     <Navbar />
                     {/* Mobile */}
