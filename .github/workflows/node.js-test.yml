@@ -14,6 +14,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Navigate to frontend
+        run: cd frontend
+        
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -28,10 +31,6 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
-          cache-dependency-path: '/frontend'
-          
-      - name: Navigate to frontend
-        run: cd frontend
       
       - name: Install dependencies
         run: pnpm install
