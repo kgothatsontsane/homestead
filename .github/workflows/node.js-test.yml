@@ -12,10 +12,6 @@ on:
 jobs:
   cache-and-install:
     runs-on: ubuntu-latest
-
-    steps:
-      - name: Navigate to frontend
-        run: cd frontend
         
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,7 +20,7 @@ jobs:
         name: Install pnpm
         with:
           version: 9
-          run_install: false
+          run_install: true
 
       - name: Install Node.js
         uses: actions/setup-node@v4
@@ -32,6 +28,9 @@ jobs:
           node-version: 20
           cache: 'pnpm'
       
+      - name: Navigate to frontend
+        run: cd frontend
+        
       - name: Install dependencies
         run: pnpm install
 
