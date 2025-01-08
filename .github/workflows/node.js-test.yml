@@ -31,6 +31,10 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-        pnpm run builld
-        pnpm test
+
+      - name: Builld App
+        run: pnpm run build
+
+      - name: Testing
+        run: pnpm test
         
