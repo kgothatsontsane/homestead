@@ -26,10 +26,13 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20, 18, 22
+          node-version: 20
           cache: 'pnpm'
           cache-dependency-path: '/frontend'
-
+          
+      name: Navigate to frontend
+        run: cd frontend
+      
       - name: Install dependencies
         run: pnpm install
 
