@@ -43,6 +43,6 @@ jobs:
         working-directory: ./frontend
 
       - name: Testing
-        run: npm run test
+        run: npm test
         working-directory: ./frontend
         
