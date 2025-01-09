@@ -33,7 +33,9 @@ jobs:
           node-version: 20
           cache: 'pnpm'
           cache-dependency-path: 'frontend/pnpm-lock.yaml'
-      
+
+      - name: Print Working Directory
+        run: pwd
         
       - name: Install dependencies
         run: cd frontend & pnpm install
