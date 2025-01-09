@@ -2,10 +2,10 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { MdHomeWork, MdOutlineListAlt, MdAddHome } from 'react-icons/md'
 
-const Navbar = () => {
+const Navbar = ({ containerStyles }) => {
   return (
-    <nav className="hidden md:flex gap-x-4">
-        <NavLink to={"/"} className={({ isActive })=> isActive ? "active-link flexCenter gap-x-1 rounded-xl px-2 py-1" : "flexCenter gap-x-1 rounded-2xl px-2 py-1"}>
+    <nav className={`${containerStyles}`}>
+        <NavLink to={"/"} className={({ isActive })=> isActive ? "active-link flexCenter gap-x-1 rounded-xl px-2 py-1" : "flexCenter gap-x-1 rounded-xl px-2 py-1"}>
         <MdHomeWork />
         <div>Home</div>
         </NavLink>
