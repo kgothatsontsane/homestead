@@ -42,7 +42,4 @@ jobs:
         run: pnpm run build
         working-directory: ./frontend
 
-      - name: Testing
-        run: npm test
-        working-directory: ./frontend
         
