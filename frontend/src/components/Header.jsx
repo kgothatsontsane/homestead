@@ -15,7 +15,7 @@ const Header = () => {
                 {/* Navigation bar */}
                 <div className="flexCenter gap-x-4">
                     {/* Desktop */}
-                    <Navbar containerStyles={"flex gap-x-5 "}/>
+                    <Navbar containerStyles={"flex gap-x-5 xl:gap-x-10  capitalize medium-25 "}/>
                     {/* Mobile */}
                     {/* <Navbar /> */}
                 </div>
