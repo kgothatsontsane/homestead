@@ -36,9 +36,8 @@ jobs:
         run: pwd
         
       - name: Install dependencies
-        with: 
-          path: ~/frontend/
-        run: cd frontend & pnpm install
+      - run: cd frontend
+      - run: npm install
 
       - name: Builld App
         run: pnpm run build
