@@ -18,8 +18,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Navigate to frontend
-        run: cd frontend
 
       - uses: pnpm/action-setup@v4
         name: Install pnpm
@@ -38,6 +36,8 @@ jobs:
         run: pwd
         
       - name: Install dependencies
+        with: 
+          path: ~/frontend/
         run: cd frontend & pnpm install
 
       - name: Builld App
