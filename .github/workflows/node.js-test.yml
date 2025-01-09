@@ -41,7 +41,9 @@ jobs:
 
       - name: Builld App
         run: pnpm run build
+        working-directory: ./frontend
 
       - name: Testing
         run: pnpm test
+        working-directory: ./frontend
         
