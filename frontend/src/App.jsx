@@ -4,8 +4,10 @@ import Listings from './pages/Listings';
 import AddProperty from './pages/AddProperty';
 import Bookings from './pages/Bookings';
 import Favourites from './pages/Favourites';
+import Contact from './pages/Contact';
 import Header from './components/Header';
 import Footer from './components/Footer';
+
 
 export default function App() {
 
@@ -18,6 +20,7 @@ export default function App() {
             <Route path="/add-property" element={<AddProperty />} />
             <Route path="/bookings" element={<Bookings />} />
             <Route path="/favourites" element={<Favourites />} />
+              <Route path="/contact" element={<Contact />} />
         </Routes>
     <Footer />
     

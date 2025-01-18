@@ -1,15 +1,36 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from './Navbar'
 import { MdClose, MdMenu } from 'react-icons/md'
 import userIcon from "../assets/user.svg"
 const Header = () => {
+    const [active, setActive] = useState(false)
     const [menuOpened, setMenuOpened] = useState(false)
     const toggleMenu = () => setMenuOpened(!menuOpened)
+    
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 0) {
+                //close the menu if open when scrolling
+                if (menuOpened) {
+                    setMenuOpened(false);
+                }
+            }
+            //detect scrolling
+            setActive(window.scrollY > 40);
+        };
+        window.addEventListener("scroll", handleScroll);
+        
+    
+      return () => {
+        window.removeEventListener("scroll", handleScroll)
+      }
+    }, [menuOpened]) // Using dependency array ensures that the effect runs when menuOpened changes
+    
   return (
    <header className='max-padd-container fixed top-1 w-full left-0 right-0 z-[50]'>
         {/* Container */}
-        <div className='max-padd-container transition-all duration-200 rounded-xl px-5 ring-1 ring-slate-900/5 '>
+          <div className={`${active ? 'max-padd-container transition-all duration-200 rounded-xl px-5 ring-1 ring-slate-900/5  py-0' : 'max-padd-container transition-all duration-200 rounded-xl px-5 ring-1 ring-slate-900/5 py-1'}`}>
             <div className='flexBetween py-4 '>
                 {/* Logo */}
                 <Link to={"/"} >
@@ -18,7 +39,7 @@ const Header = () => {
                 {/* Navigation bar */}
                 <div className="flexCenter gap-x-4">
                     {/* Desktop */}
-                    <Navbar containerStyles={"hidden xl:flex gap-x-5 xl:gap-x-10  capitalize medium-15 ring-1 ring-slate-900/10 rounded-xl p-2 bg-primary "}/>
+                    <Navbar containerStyles={"hidden xl:flex gap-x-5 xl:gap-x-10  capitalize medium-15 ring-1 ring-slate-900/10 rounded-xl p-2 bg-primary/55 "}/>
                     {/* Mobile */}
                       <Navbar containerStyles={`${menuOpened ? "flex items-start flex-col gap-y-8 capitalize fixed top-20 right-8 p-12 bg-white rounded-xl shadow-md w-64 medium-16 ring-1 ring-slate-900/5 transition-all duration-300 z-50" : "flex items-start flex-col gap-y-8 capitalize fixed top-20 -right-[100%] p-12 bg-white rounded-2xl shadow-md w-64 medium-16 ring-1 ring-slate-900/5 transition-all duration-300 z-50"}`}/> 
                 </div>
