@@ -7,15 +7,13 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  
+
   font-family: "Inter", sans-serif;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-
 }
 font-ace {
   font-family: "Avenir", sans-serif;
@@ -75,7 +73,7 @@ font-ace {
   }
 
   .btn-secondary {
-    @apply ring-1 ring-tertiary medium-15 bg-tertiary px-7 py-[10px] text-white transition-all hover:bg-tertiary/90;
+    @apply ring-1 ring-secondary medium-15 bg-secondary px-7 py-[10px] text-white transition-all hover:bg-tertiary/90;
   }
 
   .btn-secondary-outline {
