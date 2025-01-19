@@ -8,7 +8,7 @@ const Hero = () => {
             <div className='relative top-32 xs:top-52'>
                 <span className='medium-18'>Welcome to Homestead</span>
                 <h1 className='h1 capitalize max-w-[40rem]'>Discover Your Dream Home With Homestead</h1>
-                <p className='my-10 max-w-[33rem] text-slate-900 bg-cyan-200/60 rounded-xl pt-1 pb-1 pr-4 pl-4'> Lorem, ipsum dolor sit amet consectetur adipisicing elit. Non rerum dolorum cumque magni rem illo quia, autem porro excepturi, quidem commodi ad perferendis culpa.
+                <p className='my-10 max-w-[32rem] bg-sky-300/70 text-slate-900 rounded-xl p-2  pl-4'> Lorem, ipsum dolor sit amet consectetur adipisicing elit. Non rerum dolorum cumque magni rem illo quia, autem porro excepturi, quidem commodi ad perferendis culpa.
                 </p>
                 {/* View Listings Button */}
                 <div className='inline-flex items-center justify-center gap-4 p-2 bg-white rounded-xl'>
@@ -16,7 +16,7 @@ const Hero = () => {
                         <h5 className='uppercase font-bold'>Valuation Report</h5>
                         <p className='regular-14'>On All Properties</p>
                     </div>
-                    <Link to="/listings" className='btn-secondary rounded-xl'>View Homes</Link>
+                    <Link to="/listings" className='btn-secondary rounded-xl flexCenter !py-5'>View Homes</Link>
                 </div>
             </div>
         </div>
