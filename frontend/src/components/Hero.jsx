@@ -13,8 +13,8 @@ const Hero = () => {
                 {/* View Listings Button */}
                 <div className='inline-flex items-center justify-center gap-4 p-2 bg-white rounded-xl'>
                     <div className='text-center regular-14 leading-tight pl-5'>
-                        <h5 className='uppercase font-bold'>Valuation Report</h5>
-                        <p className='regular-14'>On All Properties</p>
+                        <h5 className='uppercase font-bold'>Free Valuation Report</h5>
+                        <p className='regular-14 text-slate-600'>On All Of Our Properties</p>
                     </div>
                     <Link to="/listings" className='btn-secondary rounded-xl flexCenter !py-5'>View Homes</Link>
                 </div>
