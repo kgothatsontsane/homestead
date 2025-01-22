@@ -1,6 +1,6 @@
 import React from 'react'
 import aboutImg from "../assets/about.jpg"
-import { MdFormatQuote } from 'react-icons/md'
+import { MdFormatQuote, MdHome, MdContactMail } from 'react-icons/md'
 
 const About = () => {
   return (
@@ -17,7 +17,26 @@ const About = () => {
                     </p>     
                 </div>
             </div>
-            {/}
+            {/* Right Side*/}
+            <di className='flex-1 flex justify-center flex-col'>
+                <span className='medium-18'>
+                    Extraordinary Homes For Extraordinary People
+                </span>
+                <h2 className='h2'>Envision A New Way Of Finding and Selling Premium Real Estate</h2>
+                <p className='py-5'> 
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nobis delore expedita fugit, quidem, quos, quas quae voluptas quia quibusdam. 
+                </p>
+                <div className='flex flex-wrap gap-4'>
+                    <button className='bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg flex items-center'>
+                        <MdHome className='mr-2' />
+                        Add Home
+                    </button>
+                    <button className='bg-secondary hover:bg-secondary-dark text-white py-2 px-4 rounded-lg flex items-center'>
+                        <MdContactMail className='mr-2' />
+                        Contact
+                    </button>
+                </div>
+            </di>
         </div>
     </section>
   )
