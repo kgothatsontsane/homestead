@@ -8,7 +8,7 @@ const About = () => {
             <div className='flex flex-col xl:flex-row items-center justify-between gap-10 bg-white shadow-lg rounded-3xl p-10'>
                 <div className='flex-1 relative'>
                     <img src={aboutImg} alt="About Us" className='rounded-3xl w-[488px]'/>
-                    <div className='bg-white absolute bottom-16 left-16 shadow-md max-w-xs max-h-xs p-4 rounded-xl flexCenter flex-col'>
+                    <div className='bg-white absolute bottom-16 left-16 pr-3 mr-12 shadow-md max-w-xs p-4 rounded-xl flexCenter flex-col'>
                         <span className='relative bottom-8 p-3 shadow-md bg-white h-12 w-12 rounded-full flex items-center'>
                             <MdFormatQuote className='text-2xl'/>
                         </span>
@@ -21,7 +21,7 @@ const About = () => {
                 {/* Right Side*/}
                 <div className='flex-1 flex justify-center flex-col'>
                     <span className='medium-18'>
-                        Extraordinary Homes Curated For Extraordinary People
+                        
                     </span>
                     <h2 className='h2'>Envision A New Way Of Finding and Selling Premium Real Estate</h2>
                     <p className='py-5'> 
@@ -31,11 +31,11 @@ const About = () => {
                         Our mission is to redefine the real estate experience by offering unparalleled service and expertise. We believe in building lasting relationships with our clients, and we are committed to exceeding your expectations at every step of the journey.
                     </p>
                     <div className='flex flex-wrap gap-4 flex-col xl:flex-row pt-7'>
-                        <button className='bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg flex items-center'>
+                        <button className='bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg flex items-center mb-4 xl:mb-0 xl:mr-4'>
                             <MdAddHome className='mr-2' />
                             Add My Home
                         </button>
-                        <button className='bg-secondary hover:bg-secondary-dark text-white py-2 px-4 rounded-lg flex items-center hover:bg-blue-700'>
+                        <button className='bg-secondary hover:bg-secondary-dark text-white py-2 px-4 rounded-lg flex items-center'>
                             <MdContactSupport className='mr-2' />
                             Contact Us
                         </button>
