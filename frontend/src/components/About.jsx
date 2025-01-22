@@ -8,7 +8,7 @@ const About = () => {
         <div className='flex flex-col xl:flex-row items-center justify-between gap-10'>
             <div className='flex-1 relative'>
                 <img src={aboutImg} alt="About Us" className='rounded-full w-[488px]'/>
-                  <div className='bg-white absolute bottom-16 left-16 shadow-md max-w-xs max-h-xs p-4 rounded-full flexCenter flex-col'>
+                  <div className='bg-white absolute bottom-16 left-16 shadow-md max-w-xs max-h-xs p-4 rounded-xl flexCenter flex-col'>
                     <span className='relative bottom-8 p-3 shadow-md bg-white '>
                         <MdFormatQuote className='text-2xl'/>
                     </span>
