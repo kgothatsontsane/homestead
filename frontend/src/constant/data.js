@@ -25,41 +25,41 @@ export const PROPERTIES = [
     category: "Villa",
     address: "Beach Road 21",
     province: "Western Cape",
-    city: "Cape Town",
-    area: 450,
-    price: 4500000,
+    city: "Bloubergstrand",
+    area: 662,
+    price: 7500000,
     description: "Luxurious villa with stunning ocean views and modern amenities.",
     facilities: {
-      bedrooms: 4,
-      bathrooms: 3,
-      parkings: 2
+      bedrooms: 3,
+      bathrooms: 2,
+      parkings: 4
     }
   },
   {
     title: "Urban Oasis in the Heart of Sandton",
     image: img2,
     category: "Apartment",
-    address: "Sandton Drive 105",
+    address: "1 The Da Vinci Penthouse Suites",
     province: "Gauteng",
     city: "Johannesburg",
-    area: 300,
-    price: 3500000,
+    area: 625,
+    price: 42000000,
     description: "Modern apartment in the heart of Sandton with all the conveniences.",
     facilities: {
-      bedrooms: 3,
-      bathrooms: 2,
-      parkings: 1
+      bedrooms: 5,
+      bathrooms: 6,
+      parkings: 3
     }
   },
   {
     title: "Beachfront Haven with Stunning Views",
     image: img3,
     category: "House",
-    address: "Marine Parade 15",
+    address: "53 Fish Eagle",
     province: "KwaZulu-Natal",
-    city: "Durban",
-    area: 500,
-    price: 5000000,
+    city: "Ballito",
+    area: 1219,
+    price: 230000000,
     description: "Spacious house with direct access to the beach and beautiful sea views.",
     facilities: {
       bedrooms: 5,
@@ -68,18 +68,18 @@ export const PROPERTIES = [
     }
   },
   {
-    title: "Charming Suburban Cottage",
+    title: "Masterpiece Champagne Home",
     image: img4,
-    category: "Cottage",
+    category: "House",
     address: "Jacaranda Street 77",
     province: "Gauteng",
-    city: "Pretoria",
-    area: 350,
-    price: 3000000,
-    description: "Charming cottage in a quiet suburb with a beautiful garden.",
+    city: "Pretoria East",
+    area: 1596,
+    price: 14900000,
+    description: "Charming home in a quiet suburb with a beautiful garden.",
     facilities: {
-      bedrooms: 3,
-      bathrooms: 2,
+      bedrooms: 5,
+      bathrooms: 7,
       parkings: 2
     }
   },
