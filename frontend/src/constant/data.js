@@ -91,12 +91,12 @@ export const PROPERTIES = [
     province: "Eastern Cape",
     city: "Port Elizabeth",
     area: 400,
-    price: 3200000,
+    price: 18500000,
     description: "Perfect family home with spacious rooms and a large backyard.",
     facilities: {
-      bedrooms: 4,
-      bathrooms: 3,
-      parkings: 2
+      bedrooms: 6,
+      bathrooms: 7.5,
+      parkings: 5
     }
   },
   {
