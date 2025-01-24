@@ -9,6 +9,9 @@ const Home = () => {
         <Hero/>
         <About/>
         <Properties/>
+        <div>
+            <img src={} alt='' />
+        </div>
     </main>
   )
 }
