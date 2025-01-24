@@ -2,6 +2,7 @@ import React from 'react'
 import Hero from '../components/Hero'
 import About from '../components/About'
 import Properties from '../components/Properties'
+import featuredImg from '../assets/featured.png'
 
 const Home = () => {
   return (
@@ -10,7 +11,7 @@ const Home = () => {
         <About/>
         <Properties/>
         <div>
-            <img src={bannerImg} alt='' />
+            <img src={featuredImg} alt='' />
         </div>
     </main>
   )
