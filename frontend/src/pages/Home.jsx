@@ -10,9 +10,10 @@ const Home = () => {
         <Hero/>
         <About/>
         <Properties/>
-        <div>
-            <img src={featuredImg} alt='' />
+        <div className='max-padd-container py-16 overflow-x-hidden '>
+            <img src={featuredImg} alt='Click to view listings' />
         </div>
+        
     </main>
   )
 }
