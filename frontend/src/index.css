@@ -59,7 +59,7 @@ font-ace {
   }
 
   p {
-    @apply leading-[1.3] text-[14px] text-gray-300;
+    @apply leading-[1.3] text-[14px] text-gray-600;
   }
 }
 
