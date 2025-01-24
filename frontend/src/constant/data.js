@@ -3,12 +3,8 @@ import img2 from '../assets/img2.png'
 import img3 from '../assets/img3.png'
 import img4 from '../assets/img4.png'
 import img5 from '../assets/img5.png'
-import blog1 from '../assets/blog1.jpg'
-import blog2 from '../assets/blog2.jpg'
-import blog3 from '../assets/blog3.jpg'
-import blog4 from '../assets/blog4.jpg'
 
-// icons
+// Icons
 import {
   FaFacebook,
   FaInstagram,
@@ -17,10 +13,10 @@ import {
   FaYoutube,
 } from "react-icons/fa6";
 
-// properties data
+// Properties
 export const PROPERTIES = [
   {
-    title: "Luxurious Coastal Retreat",
+    title: "Exquisite Coastal Villa",
     image: img1,
     category: "Villa",
     address: "Beach Road 21",
@@ -36,7 +32,7 @@ export const PROPERTIES = [
     }
   },
   {
-    title: "Urban Oasis in the Heart of Sandton",
+    title: "Lavish Sandton Penthouse",
     image: img2,
     category: "Apartment",
     address: "1 The Da Vinci Penthouse Suites",
@@ -52,7 +48,7 @@ export const PROPERTIES = [
     }
   },
   {
-    title: "Beachfront Haven with Stunning Views",
+    title: "Stunning Beachfront Mansion",
     image: img3,
     category: "House",
     address: "53 Fish Eagle",
@@ -68,7 +64,7 @@ export const PROPERTIES = [
     }
   },
   {
-    title: "Masterpiece Champagne Home",
+    title: "Elegant Champagne Home",
     image: img4,
     category: "House",
     address: "Jacaranda Street 77",
@@ -84,7 +80,7 @@ export const PROPERTIES = [
     }
   },
   {
-    title: "Perfect Family Home with Spacious Rooms",
+    title: "Spacious Family Residence",
     image: img5,
     category: "Residence",
     address: "Summerstrand 9",
@@ -100,7 +96,7 @@ export const PROPERTIES = [
     }
   },
   {
-    title: "Tranquil Retreat with Modern Amenities",
+    title: "Serene Modern Retreat",
     image: img1,
     category: "House",
     address: "Olive Hill 305",
@@ -116,7 +112,7 @@ export const PROPERTIES = [
     }
   },
   {
-    title: "Nature Escape Close to Reserves",
+    title: "Luxurious Nature Villa",
     image: img2,
     category: "Villa",
     address: "Kruger Park Road 88",
@@ -132,7 +128,7 @@ export const PROPERTIES = [
     }
   },
   {
-    title: "Historic Home with Modern Updates",
+    title: "Historic Kimberley Cottage",
     image: img3,
     category: "Cottage",
     address: "Big Hole Street 123",
@@ -148,7 +144,7 @@ export const PROPERTIES = [
     }
   },
   {
-    title: "Modern Residence with All Amenities",
+    title: "Modern Polokwane Residence",
     image: img4,
     category: "Residence",
     address: "Thabo Mbeki Street 42",
@@ -166,32 +162,8 @@ export const PROPERTIES = [
 ];
 
 
-// properties data
-export const BLOGS = [
-  {
-    title: "Tranquil Terrace Tranquility Haven",
-    image: blog1,
-    category: "Cottage",
-  },
-  {
-    title: "Oceanview Oasis Serenity Escape",
-    image: blog2,
-    category: "Residence",
-  },
-  {
-    title: "Sunrise Sanctuary Solace Retreat",
-    image: blog3,
-    category: "House",
-  },
-  {
-    title: "Urban Elegance Sophistication Haven",
-    image: blog4,
-    category: "Property",
-    }
-]
 
-
-// FOOTER SECTION
+// Footer
 export const FOOTER_LINKS = [
   {
     title: "Learn More",
