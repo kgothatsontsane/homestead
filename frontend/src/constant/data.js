@@ -105,14 +105,14 @@ export const PROPERTIES = [
     category: "House",
     address: "Olive Hill 305",
     province: "Free State",
-    city: "Bloemfontein",
-    area: 450,
-    price: 2800000,
+    city: "Parys",
+    area: 2000,
+    price: 19950000,
     description: "Peaceful retreat with modern amenities and beautiful surroundings.",
     facilities: {
-      bedrooms: 3,
-      bathrooms: 2,
-      parkings: 2
+      bedrooms: 13,
+      bathrooms: 13,
+      parkings: 9
     }
   },
   {
