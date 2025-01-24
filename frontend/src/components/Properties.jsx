@@ -1,10 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { VscSettings } from 'react-icons/vsc'
-import { Swiper} from 'swiper/react'
+import { Swiper, SwiperSlide} from 'swiper/react'
 import { Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/navigation'
+import { PROPERTIES } from '../constant/data'
+import Item from './item'
+
 const Properties = () => {
   return (
     <section className='max-padd-container'>
@@ -41,7 +44,13 @@ const Properties = () => {
                 modules={ Autoplay}
                 className='h-[488px] md:h-[533px] lg:h-[422px] mt-5'
                 >
-                
+                    {
+                        PROPERTIES.map((property) => (
+                            <SwiperSlide key={property.title}>
+                                <Item />
+                            </SwiperSlide>
+                        ))
+                    }
                 </Swiper>
         </div>
     </section>
