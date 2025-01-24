@@ -1,8 +1,16 @@
 import React from 'react'
 
-const Item = () => {
+const Item = ({ property }) => {
   return (
-    <div>Item</div>
+    <div>
+        <div>
+            <img src={property.image} alt={property.title} className='rounded-xl w-full'/>
+              {/* Like Button */}
+            <div>
+                <Fvo 
+            </div>
+        </div>
+    </div>
   )
 }
 

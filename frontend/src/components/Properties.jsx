@@ -6,7 +6,7 @@ import { Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import { PROPERTIES } from '../constant/data'
-import Item from './item'
+import Item from '../components/item'
 
 const Properties = () => {
   return (
@@ -47,7 +47,7 @@ const Properties = () => {
                     {
                         PROPERTIES.map((property) => (
                             <SwiperSlide key={property.title}>
-                                <Item />
+                                <Item property={property} />
                             </SwiperSlide>
                         ))
                     }
