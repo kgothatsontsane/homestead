@@ -10,7 +10,7 @@ const Home = () => {
         <About/>
         <Properties/>
         <div>
-            <img src={} alt='' />
+            <img src={bannerImg} alt='' />
         </div>
     </main>
   )
