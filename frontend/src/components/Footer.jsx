@@ -20,27 +20,25 @@ const Footer = () => {
               </span>
             </Link>
             <p className="py-4">
-              Explore our curated listings to find your dream home. Our team is dedicated to providing you with the best real estate experience at your fingertips.
+              Explore our curated listings to find your dream home.<br></br> Our team is dedicated to providing you with the best real estate experience at your fingertips.
             </p>
-            <div className="flexBetween pl-6 h-[3.3rem] bg-white w-full max-w-[366px] roundted-full ring-1 ring-slate-500/5">
+            <div className="flexBetween pl-6 h-[3.3rem] bg-white w-full max-w-[366px] rounded-xl ring-1 ring-slate-500/5">
               <input
                 type="email"
                 placeholder="Enter your email"
                 className="bg-transparent border-none outline-none"
               />
-              <button className="btn-secondary rounded-full relative right-[0.22rem]">
+              <button className="btn-secondary rounded-xl relative right-[0.22rem]">
                 Subscribe
               </button>
             </div>
           </di>
           <div className="flex justify-between flex-wrap gap-8">
-            {FOOTER_LINKS.map((col, index) => (
-              <FooterColumn key={index} title={col.title}>
+            {FOOTER_LINKS.map((col) => (
+              <FooterColumn key={col.title} title={col.title}>
                 <ul className="flex flex-col gap-4 regular text-gray-20">
-                  {col.links.map((link, linkIndex) => (
-                    <li key={linkIndex}>
-                      <Link to="/">{link}</Link>
-                    </li>
+                  {col.links.map((link) => (
+                      <Link to="/" key={link}>{link}</Link>
                   ))}
                 </ul>
               </FooterColumn>
@@ -49,7 +47,7 @@ const Footer = () => {
               <FooterColumn title={FOOTER_CONTACT_INFO.title}>
                 {FOOTER_CONTACT_INFO.links.map((link) => (
                   <Link to={'/'} key={link.label} className='flex gap-4 md:flex-col lg:flex-row'>
-                    <p>{link.dlabel}</p>:<p>{link.value}</p>
+                    <p>{link.label}</p>:<p>{link.value}</p>
                   </Link>
                 ))}
               </FooterColumn>
