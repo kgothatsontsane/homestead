@@ -10,7 +10,7 @@ const Footer = () => {
         {/* Content Container */}
         <div>
           <div>
-            <Link to='/'></Link>
+            <Link></Link>
           </div>
         </div>
       </div>
