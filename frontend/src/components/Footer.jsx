@@ -5,7 +5,7 @@ import { FOOTER_CONTACT_INFO, FOOTER_LINKS, SOCIALS } from '../constant/data'
 const Footer = () => {
   return (
     <footer className="max-padd-container mb-4">
-      <div className="max-padd-container bg-primary rounded-tr-xl pt-12 xl:pt-20 pb-8">
+      <div className="max-padd-container bg-primary rounded-t-xl pt-12 xl:pt-20 pb-8">
         <h3 className="h3">Explore the best properties with us?</h3>
         <p>
           Are you ready to discover the finest properties tailored to your exquisite taste and lifestyle?
