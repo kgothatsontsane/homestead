@@ -168,20 +168,17 @@ export const FOOTER_LINKS = [
   {
     title: "Learn More",
     links: [
-      "About Us",
-      "Latest Items",
-      "Hot Offers",
-      "Popular residencies",
+      "About Homestead",
       "FAQ",
       "Privacy Policy",
     ],
   },
   {
-    title: "Our Community",
+    title: "Explore",
     links: [
+      "Latest Homes",
+      "Featured Homes",
       "Terms and Conditions",
-      "Special Offers",
-      "Customer Reviews",
     ],
   },
 ];
@@ -195,7 +192,7 @@ export const FOOTER_CONTACT_INFO = {
 };
 
 export const SOCIALS = {
-  title: "Social",
+  title: "Social Media",
   links: [
     { icon: <FaFacebook />, id: "facebook" },
     { icon: <FaInstagram />, id: "instagram" },
