@@ -11,9 +11,9 @@ const Home = () => {
         <About/>
         <Properties/>
         <div className='max-padd-container py-16 overflow-x-hidden '>
-            <img src={featuredImg} alt="Click to view listings" />
+            <img src={featuredImg} alt='Click to view listings' />
         </div>
-        span
+        
     </main>
   )
 }
