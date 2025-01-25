@@ -6,7 +6,7 @@ import { Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import { PROPERTIES } from '../constant/data'
-import Item from '../components/item'
+import Item from '../components/Item'
 
 const Properties = () => {
   return (
