@@ -8,7 +8,11 @@ const Footer = () => {
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, corporis recusandae exercita</p>
         
         {/* Content Container */}
-        <div></div>
+        <div>
+          <div>
+            <Link to='/'></Link>
+          </div>
+        </div>
       </div>
     </footer>
   )
