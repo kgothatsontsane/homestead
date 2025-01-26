@@ -28,13 +28,19 @@ const Header = () => {
     }, [menuOpened]) // Using dependency array ensures that the effect runs when menuOpened changes
     
   return (
-    <header className="max-padd-container fixed top-1 w-full left-0 right-0 z-[50]">
+    <header
+      className={`${
+        active
+          ? "max-padd-container fixed w-full left-0 right-0 z-[50]"
+          : "max-padd-container fixed top-1 w-full left-0 right-0 z-[50]"
+      }`}
+    >
       {/* Container */}
       <div
         className={`${
           active
-            ? "max-padd-container transition-all duration-200 rounded-xl px-5 ring-1 ring-slate-900/5 py-0 bg-white"
-            : "max-padd-container transition-all duration-200 rounded-xl px-5 ring-1 ring-slate-900/5 py-1 bg-white"
+            ? "max-padd-container transition-all duration-200 rounded-b-xl px-5 ring-1 ring-slate-900/5 py-0 bg-white"
+            : "max-padd-container transition-all duration-200 rounded-b-xl px-5 ring-1 ring-slate-900/5 py-1 bg-white"
         }`}
       >
         <div className="flexBetween py-4 ">
