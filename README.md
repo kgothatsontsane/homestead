@@ -70,8 +70,7 @@ To get started with Homestead, follow these steps:
 
 - **Landing Page**: [Coming Soon](https://kgothatsontsane.github.io/homestead-landing-page/)
 - **Deployed Site**: Coming Soon
-- **Source Code**: [GitHub Repository](https://github.com/kgothatsontsane-repo/homestead)
-- **Linkedin Profile**: [Your Website](https://linkedin.com/in/kgothatsontsane)
+- **Linkedin Profile**: [Kgothatso Ntsane](https://linkedin.com/in/kgothatsontsane)
 
 ## 📜 License
 
