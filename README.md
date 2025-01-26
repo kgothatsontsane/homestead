@@ -68,7 +68,7 @@ To get started with Homestead, follow these steps:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
 
-## Credits:
+## Credits
 
 Icons:
 <a href="https://iconscout.com/icons/property" class="text-underline font-size-sm" target="_blank">User</a> by <a href="https://iconscout.com/contributors/rengised" class="text-underline font-size-sm">Alex Martynov</a> on <a href="https://iconscout.com" class="text-underline font-size-sm">IconScout</a>
