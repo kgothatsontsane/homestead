@@ -17,11 +17,10 @@ model User {
   id               String     @id @default(auto()) @map("_id") @db.ObjectId
   email            String     @unique
   name             String?
-  password         String
+  image            String?
   bookedViewings   Json[]
   favPropertiesID  String[]   @db.ObjectId
   ownedProperties  Property[] @relation("Owner")
-  bookedProperties Property[] @relation("BookedBy")
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
 }
@@ -37,9 +36,7 @@ model Property {
   country     String
   facilities  Json[]
   ownerEmail  String
-  bookedByID  String @db.ObjectId
   owner       User   @relation("Owner", fields: [ownerEmail], references: [email])
-  bookedBy    User   @relation("BookedBy", fields: [bookedByID], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
