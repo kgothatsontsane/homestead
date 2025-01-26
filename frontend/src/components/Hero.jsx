@@ -10,7 +10,7 @@ const Hero = () => {
           <h1 className="h1 capitalize max-w-[40rem]">
             Discover Your Dream Home With Homestead
           </h1>
-          <p className="my-10 max-w-[32rem] bg-cyan-300/60 text-slate-900 rounded-xl p-2  pl-4">
+          <p className="my-10 max-w-[32rem] bg-cyan-50 text-slate-900 rounded-xl p-2  pl-4">
             We are dedicated to providing you with a superior real estate experience.<br></br>
             Explore a wide range of properties tailored to your needs.<br></br>
             Find your perfect home with ease and confidence.

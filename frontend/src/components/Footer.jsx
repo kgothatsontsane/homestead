@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <footer className="max-padd-container mb-4">
       <div className="max-padd-container bg-primary rounded-t-xl pt-12 xl:pt-20 pb-8">
-        <h3 className="h3">Explore the best properties with us?</h3>
+        <h3 className="h3">Ready to explore our curated properties?</h3>
         <p>
           Are you ready to discover the finest properties tailored to your exquisite taste and lifestyle?
         </p>
