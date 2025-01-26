@@ -18,6 +18,15 @@ Homestead is a comprehensive real estate platform designed to centralize propert
 - **Media Storage** 📁: Secure storage for property images and documents.
 - **Functioning Landing Page** 🌐: Includes a fully operational landing page.
 
+## 🛠️ Stack and Technologies
+
+- **Frontend**: React, Tailwind CSS, Swiper
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB, Prisma ORM
+- **Authentication**: JWT (JSON Web Tokens)
+- **Deployment**: Vercel
+- **Version Control**: Git, GitHub
+
 ### 📚 Installation
 
 To get started with Homestead, follow these steps:
