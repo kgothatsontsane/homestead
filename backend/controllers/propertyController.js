@@ -27,15 +27,15 @@ export const createProperty = asyncHandler(async (req, res) => {
 
     // Validate required fields
     const missingFields = [];
-    if (!title) missingFields.push('title');
-    if (!description) missingFields.push('description');
-    if (!price) missingFields.push('price');
-    if (!address) missingFields.push('address');
-    if (!city) missingFields.push('city');
-    if (!country) missingFields.push('country');
-    if (!image) missingFields.push('image');
-    if (!facilities) missingFields.push('facilities');
-    if (!ownerEmail) missingFields.push('ownerEmail');
+    if (!title) {missingFields.push('title');}
+    if (!description) {missingFields.push('description');}
+    if (!price) {missingFields.push('price');}
+    if (!address) {missingFields.push('address');}
+    if (!city) {missingFields.push('city');}
+    if (!country) {missingFields.push('country');}
+    if (!image) {missingFields.push('image');}
+    if (!facilities) {missingFields.push('facilities');}
+    if (!ownerEmail) {missingFields.push('ownerEmail');}
 
     if (missingFields.length > 0) {
         console.log("Missing fields:", missingFields);
@@ -97,6 +97,10 @@ export const getProperty = asyncHandler(async (req, res) => {
         const property = await prisma.property.findUnique({
             where: { id }
         });
+        if (!property) {
+            console.log("Property not found with ID:", id);
+            return res.status(404).json({ message: "Property not found" });
+        }
         console.log("Property fetched successfully:", property);
         res.send(property);
     } catch (error) {
