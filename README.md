@@ -68,8 +68,8 @@ To get started with Homestead, follow these steps:
 
 ## 🔗 Links
 
-- **Landing Page**: [Visit Homestead](https://kgothatsontsane.github.io/homestead-landing-page/)
-- **Deployed Site**: [Visit Homestead](https://deployed-site.com)
+- **Landing Page**: [Coming Soon](https://kgothatsontsane.github.io/homestead-landing-page/)
+- **Deployed Site**: Coming Soon
 - **Source Code**: [GitHub Repository](https://github.com/kgothatsontsane-repo/homestead)
 - **Linkedin Profile**: [Your Website](https://linkedin.com/in/kgothatsontsane)
 
@@ -80,7 +80,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) f
 ## Credits
 
 Icons:
-<a href="https://iconscout.com/icons/property" class="text-underline font-size-sm" target="_blank">User</a> by <a href="https://iconscout.com/contributors/rengised" class="text-underline font-size-sm">Alex Martynov</a> on <a href="https://iconscout.com" class="text-underline font-size-sm">IconScout</a>
+[User](https://iconscout.com/icons/property) by [Alex Martynov](https://iconscout.com/contributors/rengised) on [IconScout](https://iconscout.com)
 
 ## Learn More
 
