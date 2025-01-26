@@ -4,8 +4,8 @@ import { MdFormatQuote, MdAddHome, MdContactSupport } from 'react-icons/md'
 
 const About = () => {
     return (
-        <section className='max-padd-container py-16 xl:py-28 bg-gray-100'>
-            <div className='flex flex-col xl:flex-row items-center justify-between gap-10 bg-white shadow-lg rounded-3xl p-10'>
+        <section className='max-padd-container py-16 xl:py-28'>
+            <div className='flex flex-col xl:flex-row items-center justify-between gap-10 bg-sky-500/5 shadow-lg rounded-3xl p-10'>
                 <div className='flex-1 relative'>
                     <img src={aboutImg} alt="About Us" className='rounded-3xl w-[488px]'/>
                     <div className='bg-white absolute xl:bottom-16 bottom-6 left-16 pr-3 mr-12 shadow-md max-w-xs p-4 rounded-xl flexCenter flex-col'>
