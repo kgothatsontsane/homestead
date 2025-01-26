@@ -26,7 +26,7 @@ export const createProperty = asyncHandler(async (req, res) => {
     console.log("Request data:", data);
 
     // Validate required fields
-    const missingFields = [];
+
     if (!title) {missingFields.push('title');}
     if (!description) {missingFields.push('description');}
     if (!price) {missingFields.push('price');}
@@ -37,10 +37,18 @@ export const createProperty = asyncHandler(async (req, res) => {
     if (!facilities) {missingFields.push('facilities');}
     if (!ownerEmail) {missingFields.push('ownerEmail');}
 
+    const requiredFields = {
+        title, description, price, address, city,
+        country, image, facilities, ownerEmail
+    };
+
+    const missingFields = Object.entries(requiredFields)
+        .filter(([_, value]) => !value)
+        .map(([key]) => key);
+
     if (missingFields.length > 0) {
-        console.log("Missing fields:", missingFields);
-        return res.status(400).json({ message: "All fields are required", missingFields });
-    }
+        return res.status(400).json({ message: "All fields are required", missingFields });  
+    }  
 
     console.log("Facilities data:", facilities);
 
@@ -54,7 +62,7 @@ export const createProperty = asyncHandler(async (req, res) => {
                 city,
                 country,
                 image,
-                facilities: [facilities], // Store facilities as an array of JSON objects
+                facilities: facilities,
                 owner: { connect: { email: ownerEmail } }
             }
         });
