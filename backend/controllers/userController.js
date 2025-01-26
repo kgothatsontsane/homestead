@@ -6,16 +6,14 @@ export const createUser = asyncHandler(async (req, res) => {
     
     let { email } = req.body;
     
-    console.log(email)
-    /*
-    const {name, email, password} = req.body;
-    const user = await prisma.user.create({
-        data: {
-            name,
-            email,
-            password
-        }
-    })
-    res.json(user)
-    */
-})
+    const userExists = await prisma.user.findUnique({ where: { email: email } })
+    if (!userExists) {
+      const user = await prisma.user.create({ data: req.body });
+      res.send({
+          message: "User Created Successfully",
+          user: user,
+      });
+    } else {
+      res.send(201).json({ message: "User already registered" })
+    }
+});
