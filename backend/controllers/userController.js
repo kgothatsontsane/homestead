@@ -57,20 +57,15 @@ export const bookViewing = asyncHandler(async (req, res) => {
   }
 
   // Validate date format
-  const dateFormats = ['dd/MM/yy', 'yyyy-MM-dd', 'MM/dd/yyyy'];
-  let parsedDate;
-  for (const formatString of dateFormats) {
-    parsedDate = parse(date, formatString, new Date());
-    if (isValid(parsedDate)) {
-      break;
-    }
-  }
-
+  const parsedDate = parse(date, 'yyyy-MM-dd', new Date());
   if (!isValid(parsedDate)) {
-    return res.status(400).json({ message: "Invalid date format. Use DD/MM/YY, YYYY-MM-DD, or MM/DD/YYYY format." });
+    return res.status(400).json({ 
+      message: "Invalid date format. Use YYYY-MM-DD format (e.g. 2024-01-31)." 
+    });
   }
 
-  const formattedDate = format(parsedDate, 'yyyy-MM-dd');
+  // No need for additional formatting since input is already in correct format
+  const formattedDate = date;
 
   try {
     const user = await prisma.user.findUnique({
@@ -110,9 +105,9 @@ export const bookViewing = asyncHandler(async (req, res) => {
   } catch (err) {
     console.error("Error booking viewing:", err.message);
     if (err.code === 'P2002') { // Prisma unique constraint violation error code
-      res.sendStatus(409).json({ message: "Duplicate entry" });
+      res.status(409).json({ message: "Duplicate entry" });
     } else {
-      res.sendStatus(500).json({ message: "Internal server error" });
+      res.status(500).json({ message: "Internal server error" });
     }
   }
 })
@@ -222,40 +217,54 @@ export const favProperties = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Property not found" });
     }
 
-    if (user.favPropertiesID.includes(rid)) {
-      const updateUser = await prisma.user.update({
+    const result = await prisma.$transaction(async (tx) => {
+      const user = await tx.user.findUnique({
         where: { email },
-        data: {
-          favPropertiesID: {
-            set: user.favPropertiesID.filter((id) => id !== rid)
+        select: { favPropertiesID: true }
+      });
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      if (user.favPropertiesID.includes(rid)) {
+        return await tx.user.update({
+          where: { email },
+          data: {
+            favPropertiesID: {
+              set: user.favPropertiesID.filter((id) => id !== rid)
+            }
+          },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            favPropertiesID: true
           }
-        },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          favPropertiesID: true
-        }
-      })
-      console.log(`Property removed from favorites for user: ${email} with property ID: ${rid}`);
-      res.status(200).json({ message: "Property removed from favorites", user: updateUser })
-    } else {
-      const updateUser = await prisma.user.update({
-        where: { email },
-        data: {
-          favPropertiesID: {
-            push: rid
+        });
+      } else {
+        return await tx.user.update({
+          where: { email },
+          data: {
+            favPropertiesID: {
+              push: rid
+            }
+          },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            favPropertiesID: true
           }
-        },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          favPropertiesID: true
-        }
-      })
+        });
+      }
+    });
+
+    if (result.favPropertiesID.includes(rid)) {
       console.log(`Property added to favorites for user: ${email} with property ID: ${rid}`);
-      res.status(200).json({ message: "Property added to favorites", user: updateUser })
+      res.status(200).json({ message: "Property added to favorites", user: result });
+    } else {
+      console.log(`Property removed from favorites for user: ${email} with property ID: ${rid}`);
+      res.status(200).json({ message: "Property removed from favorites", user: result });
     }
   } catch (err) {
     console.error("Error updating favorite properties:", err.message);
