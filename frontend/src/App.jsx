@@ -5,25 +5,26 @@ import AddProperty from './pages/AddProperty';
 import Bookings from './pages/Bookings';
 import Favourites from './pages/Favourites';
 import Contact from './pages/Contact';
-import Header from './components/Header';
-import Footer from './components/Footer';
+import { Suspense } from 'react';
+import Layout from './components/Layout';
 
 
 export default function App() {
 
   return (
     <BrowserRouter>
-    <Header />
+      <Suspense fallback={<div>Loading...</div>}> 
         <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/listings" element={<Listings />} />
-            <Route path="/add-property" element={<AddProperty />} />
-            <Route path="/bookings" element={<Bookings />} />
-            <Route path="/favourites" element={<Favourites />} />
-              <Route path="/contact" element={<Contact />} />
+          <Route element={<Layout/>}>
+          <Route path="/" element={<Home />} />
+          <Route path="/listings" element={<Listings />} />
+          <Route path="/add-property" element={<AddProperty />} />
+          <Route path="/bookings" element={<Bookings />} />
+          <Route path="/favourites" element={<Favourites />} />
+          <Route path="/contact" element={<Contact />} />
+        </Route>
         </Routes>
-    <Footer />
-    
+      </Suspense>
     </BrowserRouter>
-  )
+  );
 }
