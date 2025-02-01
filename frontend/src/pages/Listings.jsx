@@ -2,8 +2,12 @@ import React from 'react'
 import Searchbar from '../components/Searchbar'
 import { PROPERTIES } from '../constant/data'
 import Item from '../components/Item'
+import useProperties from '../hooks/useProperties'
+
 
 const Listings = () => {
+  
+  const [data, isError, isLoading] = useProperties()
   return (
     <main className='max-padd-container my-[99px]'>
       <div className='max-padd-container py-10 xl:py-22 bg-primary rounded-xl'>
