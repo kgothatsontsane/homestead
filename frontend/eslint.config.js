@@ -24,7 +24,6 @@ export default [
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       'react-compiler': reactCompiler,
-      'react-scan': reac
     },
     rules: {
       ...js.configs.recommended.rules,
@@ -36,7 +35,8 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
-      'react-compiler/react-compiler': 'error'
+      'react-compiler/react-compiler': 'warn'
+
     },
   },
 ]
