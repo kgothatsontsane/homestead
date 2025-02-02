@@ -26,17 +26,6 @@ export const createProperty = asyncHandler(async (req, res) => {
     console.log("Request data:", data);
 
     // Validate required fields
-
-    if (!title) {missingFields.push('title');}
-    if (!description) {missingFields.push('description');}
-    if (!price) {missingFields.push('price');}
-    if (!address) {missingFields.push('address');}
-    if (!city) {missingFields.push('city');}
-    if (!country) {missingFields.push('country');}
-    if (!image) {missingFields.push('image');}
-    if (!facilities) {missingFields.push('facilities');}
-    if (!ownerEmail) {missingFields.push('ownerEmail');}
-
     const requiredFields = {
         title, description, price, address, city,
         country, image, facilities, ownerEmail
