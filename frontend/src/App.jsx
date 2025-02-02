@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'; 
 import Home from './pages/Home';
 import Listings from './pages/Listings';
 import AddProperty from './pages/AddProperty';
 import Bookings from './pages/Bookings';
 import Favourites from './pages/Favourites';
-import Contact from './pages/Contact';
-import { Suspense } from 'react';
-import Layout from './components/Layout';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import Contact from './pages/Contact';import Layout from './components/Layout';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ToastContainer } from 'react-toastify';
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 
 export default function App() {
@@ -30,6 +30,8 @@ export default function App() {
           </Routes>
         </Suspense>
       </BrowserRouter>
+      <ToastContainer/>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }
