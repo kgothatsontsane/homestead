@@ -8,7 +8,9 @@ import Favourites from './pages/Favourites';
 import Contact from './pages/Contact';import Layout from './components/Layout';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import Property from './pages/Property';
 
 
 export default function App() {
@@ -21,7 +23,10 @@ export default function App() {
           <Routes>
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
-              <Route path="/listings" element={<Listings />} />
+              <Route path="/listings">
+                <Route index element={<Listings />} />
+                <Route path=":propertyId" element={<Property/>} />
+              </Route>
               <Route path="/add-property" element={<AddProperty />} />
               <Route path="/bookings" element={<Bookings />} />
               <Route path="/favourites" element={<Favourites />} />
