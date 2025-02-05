@@ -2,7 +2,7 @@ import React from 'react'
 import Hero from '../components/Hero'
 import About from '../components/About'
 import Properties from '../components/Properties'
-import featuredImg from '../assets/featured.png'
+const featuredImg = new URL('../assets/featured.png', import.meta.url).href
 
 const Home = () => {
   return (

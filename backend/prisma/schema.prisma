@@ -34,6 +34,7 @@ model Property {
   image       String
   city        String
   country     String
+  area        Int?    // Make area optional by adding ?
   facilities  Json[]
   ownerEmail  String
   owner       User   @relation("Owner", fields: [ownerEmail], references: [email])

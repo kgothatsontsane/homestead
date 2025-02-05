@@ -13,7 +13,7 @@ const Footer = () => {
         <hr className="my-8 bg-slate-900/30 h-[2px]" />
         {/* Content Container */}
         <div className="flex justify-between flex-wrap gap-x-2 gap-y-8">
-          <di className="max-w-sm">
+          <div className="max-w-sm">
             <Link to="/" className="flex items-center gap-x-2">
               <span className="font-[900] text-[24px]">
                 Home<span className="font-[600] text-[24px]">stead</span>
@@ -32,7 +32,7 @@ const Footer = () => {
                 Subscribe
               </button>
             </div>
-          </di>
+          </div>
           <div className="flex justify-between flex-wrap gap-8">
             {FOOTER_LINKS.map((col) => (
               <FooterColumn key={col.title} title={col.title}>

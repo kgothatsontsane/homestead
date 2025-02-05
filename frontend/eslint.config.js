@@ -18,13 +18,17 @@ export default [
         sourceType: 'module',
       },
     },
-    settings: { react: { version: '18.3' } },
+    settings: { react: { version: '19.0' } },
+    extends: [
+      'eslint:recommended',
+      'plugin:react/recommended',
+      'plugin:react-hooks/recommended'
+    ],
     plugins: {
       react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       'react-compiler': reactCompiler,
-      'react-scan': reac
     },
     rules: {
       ...js.configs.recommended.rules,
@@ -36,7 +40,8 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
-      'react-compiler/react-compiler': 'error'
+      'react-compiler/react-compiler': 'error',
+      'react/react-in-jsx-scope': 'off'
     },
   },
 ]
