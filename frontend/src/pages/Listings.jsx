@@ -1,8 +1,8 @@
 import React, { useMemo, useEffect, useCallback } from 'react'
 import Searchbar from '../components/Searchbar'
-import { PROPERTIES } from '../constant/data'
 import Item from '../components/Item'
 import useProperties from '../hooks/useProperties'
+import { PuffLoader } from 'react-spinners'
 
 const Listings = () => {
   const { data, isError, isLoading, error, refetch } = useProperties()
@@ -13,14 +13,22 @@ const Listings = () => {
     await refetch();
   }, [refetch]);
 
-  const logState = useMemo(() => ({
-    hasData: Boolean(data),
-    dataLength: data?.length,
-    isError,
-    isLoading,
-    errorMessage: error instanceof Error ? error.message : 'Unknown error',
-    renderTime: `${performance.now()}ms`
-  }), [data, isError, isLoading, error]);
+  const logState = useMemo(() => {
+    let errorMessage = '';
+    if (isError) {
+      errorMessage = error instanceof Error 
+        ? error.message 
+        : 'An unknown error occurred while fetching properties';
+    }
+    return {
+      hasData: Boolean(data),
+      dataLength: data?.length,
+      isError,
+      isLoading,
+      errorMessage,
+      renderTime: `${performance.now()}ms`
+    };
+  }, [data, isError, isLoading, error]);
 
   useEffect(() => {
     console.log('[Listings] Component state:', logState);
@@ -32,11 +40,37 @@ const Listings = () => {
     }
   }, [isError, error]);
 
-  const propertyList = useMemo(() => (
-    PROPERTIES.map((property) => (
-      <Item key={property.title} property={property} />
-    ))
-  ), []);
+  useEffect(() => {
+    if (isLoading) {
+      console.log('[Listings] Loading properties...');
+    }
+  }, [isLoading]);
+
+  const propertyList = useMemo(() => {
+    if (!data) return [];
+    return data
+      .filter(property => property !== null)
+      .map((property) => (
+        <Item 
+          key={property._id || property.title} 
+          property={{
+            ...property,
+            area: property.area || 0
+          }} 
+        />
+      ));
+  }, [data]);
+
+  // Show loading state if data is not yet available or loading
+  if (isLoading || !data) {
+    return (
+      <main>
+        <div className='flex justify-center items-center h-screen'>
+          <PuffLoader size={60} color={"#123abc"} loading={true} aria-label="puff-loading" />
+        </div>
+      </main>
+    );
+  }
 
   // After all hooks, we can have conditional returns
   if (isError) {
