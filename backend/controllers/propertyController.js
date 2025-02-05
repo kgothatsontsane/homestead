@@ -18,6 +18,7 @@ export const createProperty = asyncHandler(async (req, res) => {
         address,
         city,
         country,
+        area,
         image,
         facilities,
         ownerEmail
@@ -28,7 +29,7 @@ export const createProperty = asyncHandler(async (req, res) => {
     // Validate required fields
     const requiredFields = {
         title, description, price, address, city,
-        country, image, facilities, ownerEmail
+        country, area, image, facilities, ownerEmail
     };
 
     const missingFields = Object.entries(requiredFields)
@@ -50,6 +51,7 @@ export const createProperty = asyncHandler(async (req, res) => {
                 address,
                 city,
                 country,
+                area,
                 image,
                 facilities: facilities,
                 owner: { connect: { email: ownerEmail } }
