@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types';
 import FavButton from './FavButton'
 import { MdOutlineBathtub, MdOutlineBed, MdOutlineGarage } from 'react-icons/md'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { CgRuler } from 'react-icons/cg'
 
 const Item = ({ property }) => {
@@ -23,7 +23,11 @@ const Item = ({ property }) => {
   }, [property.facilities]);
 
   return (
-    <button onClick={() => navigate(`../listings/${property.id}`)} className='rounded-xl p-5 bg-white' key={property.id}>
+    <div 
+      onClick={() => navigate(`../listings/${property.id}`)} 
+      className='rounded-xl p-5 bg-white cursor-pointer' 
+      key={property.id}
+    >
         <div className='pb-2 relative'>
             <img src={property.image} alt={property.title} className='rounded-lg w-full'/>
               {/* Like Button */}
@@ -43,13 +47,17 @@ const Item = ({ property }) => {
         <p className='pt-2 mb-4 line-clamp-2'>{property.description}</p>
         <div className='block'>
             <div className='bold-20 xl:line-clamp-none'>{formatPrice(property.price)}</div>
-            <Link to={`/`}>
-                  <button className='btn-secondary rounded-lg shadow-ms w-full mt-2'>
-                    View Property
-                </button>
-            </Link>
+            <button 
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent triggering parent onClick
+                navigate(`../listings/${property.id}`);
+              }}
+              className='btn-secondary rounded-lg shadow-ms w-full mt-2'
+            >
+              View Property
+            </button>
         </div>
-    </button>
+    </div>
   )
 }
 Item.propTypes = {
