@@ -61,3 +61,44 @@ export const getAllProperties = async () => {
     throw error;
   }
 }
+
+export const getProperty = async (id) => {
+  console.log('[API] Starting getProperty request');
+
+  try {
+    console.log('[API] Making request to:', `${baseURL}/api/property/${id}`);
+
+    const response = await api.get(`/api/property/${id}`, {
+      timeout: 10 * 1000
+    })
+
+    console.log('[API] Response received:', {
+      status: response.status,
+      headers: response.headers,
+      data: response.data
+    });
+
+    if (response.status === 400 || response.status === 500 || response.status === 404 || response.status === 401) {
+      console.error('[API] Error status received:', response.status);
+      throw response.data;
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error('[API] Error in getProperties:', {
+      name: error.name,
+      message: error.message,
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
+      config: {
+        url: error.config?.url,
+        method: error.config?.method,
+        headers: error.config?.headers,
+      }
+    });
+
+    toast.error(error.response?.data?.message || 'An error occurred whil fetching the property');
+    throw error;
+  }
+}
