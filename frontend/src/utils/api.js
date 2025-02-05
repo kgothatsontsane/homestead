@@ -2,6 +2,7 @@ import axios from 'axios'
 import dayjs from 'dayjs'
 import { toast } from 'react-toastify'
 
+// @ts-ignore
 const baseURL = import.meta.env.VITE_API_BASE_URL
 
 if (!baseURL) {
@@ -42,7 +43,16 @@ export const getAllProperties = async () => {
       throw response.data;
     }
     
-    return response.data;
+    // Add formatted dates while preserving original dates
+    const formattedData = response.data.map(property => ({
+      ...property,
+      formattedDates: {
+        created: dayjs(property.createdAt).format('DD MMM YYYY'),
+        updated: dayjs(property.updatedAt).format('DD MMM YYYY')
+      }
+    }));
+    
+    return formattedData;
   } catch (error) {
     console.error('[API] Error in getAllProperties:', {
       name: error.name,
@@ -93,8 +103,7 @@ export const getProperty = async (id) => {
       data: error.response?.data,
       config: {
         url: error.config?.url,
-        method: error.config?.method,
-        headers: error.config?.headers,
+        method: error.config?.method,        headers: error.config?.headers,
       }
     });
 
