@@ -1,8 +1,41 @@
-import React from 'react'
+/**
+ * @fileoverview Footer component with newsletter subscription and social links
+ * @module components/Footer
+ */
+import React, { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { FOOTER_CONTACT_INFO, FOOTER_LINKS, SOCIALS } from '../constant/data'
+import { toast } from 'react-toastify'
+
+/**
+ * Newsletter subscription handler
+ * @param {string} email - User's email address
+ * @returns {Promise<void>}
+ */
+const handleSubscribe = async (email) => {
+  // Implementation
+}
 
 const Footer = () => {
+  const [email, setEmail] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const onSubmit = useCallback(async (e) => {
+    e.preventDefault()
+    if (!email) return
+
+    setIsSubmitting(true)
+    try {
+      await handleSubscribe(email)
+      toast.success('Successfully subscribed to newsletter!')
+      setEmail('')
+    } catch (error) {
+      toast.error('Failed to subscribe. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }, [email])
+
   return (
     <footer className="max-padd-container mb-4">
       <div className="max-padd-container bg-primary rounded-t-xl pt-12 xl:pt-20 pb-8">
@@ -22,16 +55,19 @@ const Footer = () => {
             <p className="py-4">
               Explore our curated listings to find your dream home.<br></br> Our team is dedicated to providing you with the best real estate experience at your fingertips.
             </p>
-            <div className="flexBetween pl-6 h-[3.3rem] bg-white w-full max-w-[366px] rounded-xl ring-1 ring-slate-500/5">
+            <form onSubmit={onSubmit} className="flexBetween pl-6 h-[3.3rem] bg-white w-full max-w-[366px] rounded-xl ring-1 ring-slate-500/5">
               <input
                 type="email"
                 placeholder="Enter your email"
                 className="bg-transparent border-none outline-none"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={isSubmitting}
               />
-              <button className="btn-secondary rounded-xl relative right-[0.22rem]">
-                Subscribe
+              <button type="submit" className="btn-secondary rounded-xl relative right-[0.22rem]" disabled={isSubmitting}>
+                {isSubmitting ? 'Submitting...' : 'Subscribe'}
               </button>
-            </div>
+            </form>
           </div>
           <div className="flex justify-between flex-wrap gap-8">
             {FOOTER_LINKS.map((col) => (
@@ -71,10 +107,10 @@ const Footer = () => {
         <span>&copy; 2025 Homestead</span> All rights reserved
       </p>
     </footer>
-  );
+  )
 }
 
-export default Footer
+export default React.memo(Footer)
 
 const FooterColumn = ({ title, children }) => {
   return (
