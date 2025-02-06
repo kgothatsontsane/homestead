@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaWhatsapp, FaFacebook, FaLinkedin, FaClock, FaGlobe, FaGithub, FaInstagram, FaTelegram, FaDiscord } from 'react-icons/fa';
 import { motion } from 'framer-motion';
@@ -192,24 +191,32 @@ const Contact = () => {
     };
   }, []);
 
-  // Add scroll restoration effect
+  // Replace the existing scroll restoration effect with this optimized version
   useEffect(() => {
-    // Set smooth scroll behavior
-    document.documentElement.style.scrollBehavior = 'smooth';
+    // Add will-change hint for performance
+    document.documentElement.style.willChange = 'scroll-position';
     
-    // Ensure page starts at top
-    const timeout = setTimeout(() => {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'smooth'
+    // Use requestAnimationFrame for smooth scroll to top
+    if (window.scrollY !== 0) {
+      requestAnimationFrame(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'instant' // Use instant instead of smooth for better performance
+        });
       });
-    }, 100);
+    }
+
+    // Add passive scroll listener for better performance
+    const scrollListener = (e) => {
+      // Your scroll handling code here
+    };
+    
+    window.addEventListener('scroll', scrollListener, { passive: true });
 
     return () => {
-      // Reset scroll behavior on unmount
-      document.documentElement.style.scrollBehavior = 'auto';
-      clearTimeout(timeout);
+      // Clean up
+      document.documentElement.style.willChange = 'auto';
+      window.removeEventListener('scroll', scrollListener);
     };
   }, []);
 
