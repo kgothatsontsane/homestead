@@ -103,6 +103,23 @@ const retryWithBackoff = async (fn, retries = 3, backoff = 300) => {
   }
 };
 
+// Add environment variable validation
+const validateEnvVariables = () => {
+  const required = [
+    'VITE_EMAILJS_PUBLIC_KEY',
+    'VITE_EMAILJS_SERVICE_ID',
+    'VITE_EMAILJS_TEMPLATE_ID'
+  ];
+  
+  const missing = required.filter(key => !import.meta.env[key]);
+  
+  if (missing.length > 0) {
+    console.error(`Missing required environment variables: ${missing.join(', ')}`);
+    return false;
+  }
+  return true;
+};
+
 /**
  * Contact Page Component - Handles user inquiries and displays contact information
  * @component
@@ -196,21 +213,26 @@ const Contact = () => {
     };
   }, []);
 
-  // Unique form state management with type checking
+  // Initialize form state with defined empty values
   const [formState, setFormState] = useState({
-    data: /** @type {Record<string, string>} */ ({}),
-    errors: /** @type {Record<string, string>} */ ({}),
+    data: {
+      name: '',
+      email: '',
+      subject: '',
+      message: ''
+    },
+    errors: {},
     isSubmitting: false,
     submitCount: 0
   });
 
   const validateForm = useCallback((data) => {
     const errors = {};
-    if (!data.name.trim()) errors.name = 'Name is required';
-    if (!data.email.trim()) errors.email = 'Email is required';
-    if (!isValidEmail(data.email)) errors.email = 'Invalid email format';
-    if (!data.subject.trim()) errors.subject = 'Subject is required';
-    if (!data.message.trim()) errors.message = 'Message is required';
+    if (!data?.name?.trim()) errors.name = 'Name is required';
+    if (!data?.email?.trim()) errors.email = 'Email is required';
+    if (data?.email && !isValidEmail(data.email)) errors.email = 'Invalid email format';
+    if (!data?.subject?.trim()) errors.subject = 'Subject is required';
+    if (!data?.message?.trim()) errors.message = 'Message is required';
     
     setFormState((prevState) => ({ ...prevState, errors }));
     return Object.keys(errors).length === 0;
@@ -227,30 +249,48 @@ const Contact = () => {
     debouncedValidation(newFormData);
   }, [formState.data, debouncedValidation]);
 
-  // Pre-initialize EmailJS to improve performance
+  // Pre-initialize EmailJS with environment variable and validation
   useEffect(() => {
-    emailjs.init("woFQRIpBaxZLG85eC");
+    if (!validateEnvVariables()) {
+      toast.error('Email service not properly configured');
+      return;
+    }
+    emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
   }, []);
 
+  // Optimized form submission with validation
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
+    
+    if (!validateEnvVariables()) {
+      toast.error('Unable to send message: Email service not configured');
+      return;
+    }
+
     const startTime = performance.now();
-    setFormState((prevState) => ({ ...prevState, isSubmitting: true }));
+
+    if (!validateForm(formState.data)) {
+      return;
+    }
+
+    setFormState(prev => ({ ...prev, isSubmitting: true }));
 
     try {
-      // Prepare email data outside of the retry logic
+      // Update template parameters to match EmailJS template variables
       const templateParams = {
-        from_name: formState.data.name,
-        from_email: formState.data.email,
-        subject: formState.data.subject,
+        name: formState.data.name,         
+        email: formState.data.email,       
         message: formState.data.message,
+        subject: formState.data.subject    
       };
 
-      const result = await emailjs.send(
-        "service_1uq7mpq",
-        "template_lswo8tv",
-        templateParams,
-        "woFQRIpBaxZLG85eC"
+      const result = await retryWithBackoff(async () => 
+        emailjs.send(
+          import.meta.env.VITE_EMAILJS_SERVICE_ID,
+          import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+          templateParams,
+          import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+        )
       );
 
       if (result.text === 'OK') {
@@ -265,10 +305,10 @@ const Contact = () => {
       const endTime = performance.now();
       console.log(`Form submission took: ${(endTime - startTime).toFixed(2)}ms - ${evaluatePerformance('formSubmission', endTime - startTime)}`);
     }
-  }, [formState.data]);
+  }, [formState.data, validateForm]);
 
-  // Modify the input fields to show errors
-  const renderInput = (field) => (
+  // Memoized input renderer with controlled values
+  const renderInput = useCallback((field) => (
     <div key={field}>
       <label
         htmlFor={field}
@@ -281,7 +321,7 @@ const Contact = () => {
         name={field}
         id={field}
         required
-        value={formState.data[field]}
+        value={formState.data[field] || ''}
         onChange={handleChange}
         className={`w-full px-4 py-3 bg-blue-500/10 rounded-lg outline-none transition-all duration-300 focus:bg-sky-50 focus:shadow-md font-[500] placeholder:text-gray-400 cursor-default ${
           formState.errors[field] ? 'border-2 border-red-500' : ''
@@ -293,7 +333,7 @@ const Contact = () => {
         <p className="text-red-500 text-sm mt-1 cursor-default">{formState.errors[field]}</p>
       )}
     </div>
-  );
+  ), [formState.data, formState.errors, handleChange]);
 
   const contactInfo = [
     {
