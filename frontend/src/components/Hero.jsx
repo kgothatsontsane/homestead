@@ -1,10 +1,41 @@
-import React from 'react'
+/**
+ * @fileoverview Hero component with optimized image loading and animations
+ * @module components/Hero
+ */
+import React, { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 
+/**
+ * Hero Component
+ * @component
+ * @description Landing page hero section with animated content
+ */
 const Hero = () => {
+  const pageLoadTime = useRef(performance.now())
+
+  useEffect(() => {
+    // Monitor component performance
+    const loadTime = performance.now() - pageLoadTime.current
+    console.log(`[Hero] Component load time: ${loadTime.toFixed(2)}ms`)
+
+    // Preload background image
+    const img = new Image()
+    img.src = 'path-to-hero-bg.jpg'
+    
+    return () => {
+      console.log(`[Hero] Total lifetime: ${(performance.now() - pageLoadTime.current).toFixed(2)}ms`)
+    }
+  }, [])
+
   return (
     <section className="max-padd-container pt-[99px]">
-      <div className="max-padd-container bg-hero bg-center bg-cover bg-no-repeat h-[655px] w-full rounded-xl items-center">
+      <motion.div 
+        className="max-padd-container bg-hero bg-center bg-cover bg-no-repeat h-[655px] w-full rounded-xl items-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="relative top-32 xs:top-52">
           <span className="medium-18">Welcome to Homestead</span>
           <h1 className="h1 capitalize max-w-[40rem]">
@@ -31,9 +62,9 @@ const Hero = () => {
             </Link>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
-  );
+  )
 }
 
-export default Hero
+export default React.memo(Hero)
