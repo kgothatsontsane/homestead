@@ -41,6 +41,12 @@ font-ace {
   background: #ccc;
 }
 
+/* Add these scroll optimization rules */
+html {
+  scroll-behavior: auto !important; /* Disable smooth scroll for native performance */
+  -webkit-overflow-scrolling: touch; /* Enable momentum scrolling on iOS */
+}
+
 @layer base {
   .active-link {
     @apply bg-secondary text-white;
@@ -97,6 +103,9 @@ font-ace {
 
   .max-padd-container {
     @apply mx-auto max-w-[1440px] px-6 lg:px-12;
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
   .flexCenter {
@@ -113,6 +122,11 @@ font-ace {
 
   .flexEnd {
     @apply flex items-center justify-end;
+  }
+
+  .fixed {
+    will-change: transform;
+    transform: translateZ(0);
   }
 
   /* FONTS */
