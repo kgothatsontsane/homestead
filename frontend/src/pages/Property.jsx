@@ -121,69 +121,81 @@ const Property = () => {
   }
 
   return (
-    <section className='max-padd-container my-[99px]'>
+    <section className="max-padd-container my-[99px]">
       {/* Image container */}
-      <div className='relative w-full h-[27rem] rounded-lg overflow-hidden mb-8'>
+      <div className="relative w-full h-[27rem] rounded-lg overflow-hidden mb-8">
         <img
           src={getImageUrl(data?.image)}
           alt={data?.title}
-          className='w-full h-full object-cover'
+          className="w-full h-full object-cover"
           style={{
-            objectPosition: 'center',
+            objectPosition: "center",
           }}
         />
         {/* Like Button */}
-        <div className='absolute top-4 right-4'>
+        <div className="absolute top-4 right-4">
           <FavButton />
         </div>
       </div>
 
       {/* Content section with updated alignment */}
-      <div className='xl:flex xl:items-start gap-12 mt-8'>
+      <div className="xl:flex xl:items-start gap-12 mt-8">
         {/* LHS */}
-        <div className='flex-1'>
-          <h5 className='bold-16 my-1 text-secondary'>{data?.city}</h5>
-          <div className='flexBetween'>
-            <h4 className='medium-18 line-clamp-1 '>{data?.title}</h4>
-            <div className='bold-20 xl:line-clamp-none'>{formatPrice(data?.price)}</div>
+        <div className="flex-1">
+          <h5 className="bold-16 my-1 text-secondary">{data?.city}</h5>
+          <div className="flexBetween">
+            <h4 className="medium-18 line-clamp-1 ">{data?.title}</h4>
+            <div className="bold-20 xl:line-clamp-none">
+              {formatPrice(data?.price)}
+            </div>
           </div>
           {/* Property Info */}
-          <div className='flex gap-x-4 py-2'>
-            <div className='flexCenter gap-x-2 border-r border-slate-900/50 pr-4 font-[500]'>
+          <div className="flex gap-x-4 py-2">
+            <div className="flexCenter gap-x-2 border-r border-slate-900/50 pr-4 font-[500]">
               <MdOutlineBed /> {Number(facilities?.bedrooms) || 0}
             </div>
-            <div className='flexCenter gap-x-2 border-r border-slate-900/50 pr-4 font-[500]'>
+            <div className="flexCenter gap-x-2 border-r border-slate-900/50 pr-4 font-[500]">
               <MdOutlineBathtub /> {Number(facilities?.bathrooms) || 0}
             </div>
-            <div className='flexCenter gap-x-2 border-r border-slate-900/50 pr-4 font-[500]'>
+            <div className="flexCenter gap-x-2 border-r border-slate-900/50 pr-4 font-[500]">
               <MdOutlineGarage /> {Number(facilities?.parkings) || 0}
             </div>
-            <div className='flexCenter gap-x-2 border-r border-slate-900/50 pr-4 font-[500]'>
+            <div className="flexCenter gap-x-2 border-r border-slate-900/50 pr-4 font-[500]">
               <CgRuler /> {Number(data?.area) || 0}
             </div>
           </div>
-          <p className='pt-2 mb-4'>{data?.description}</p>
-          <div className='flexStart gap-x-2 items-center'>
+          <p className="pt-2 mb-4">{data?.description}</p>
+          <div className="flexStart gap-x-2 items-center">
             <FaLocationDot />
-              <div>
-                <p className='text-secondary'>{data?.address}</p>
-              </div>
+            <div>
+              <p className="text-secondary">{data?.address}</p>
+              <p className="text-gray-500 text-sm">{data?.city}, {data?.country || 'South Africa'}</p>
+            </div>
           </div>
-          <div className='block'>
+          <div className="flex gap-x-2 mt-4">
             <button
               onClick={(e) => {
                 e.stopPropagation(); // Prevent triggering parent onClick
                 navigate(`../listings/${data?.id}`);
               }}
-              className='btn-secondary rounded-lg shadow-ms w-full mt-2'
+              className="btn-secondary rounded-lg shadow-ms w-full mt-2"
             >
-              Book A Viewing
+              Make An Offer
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent triggering parent onClick
+                navigate(`../listings/${data?.id}`);
+              }}
+              className="btn-secondary rounded-lg shadow-ms w-full mt-2"
+            >
+              Contact Agent
             </button>
           </div>
         </div>
         {/* RHS */}
-        <div className='flex-1 mt-8 xl:mt-0'>
-          <Map 
+        <div className="flex-1 mt-8 xl:mt-0">
+          <Map
             address={data?.address}
             city={data?.city}
             country="South Africa"
