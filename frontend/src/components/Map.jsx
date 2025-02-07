@@ -85,14 +85,23 @@ const Map = ({ address, city, country }) => {
       zoom={13}
       scrollWheelZoom={false}
       style={{ height: '400px', width: '100%', borderRadius: '0.5rem' }}
+      zoomControl={true}
     >
       <ChangeView center={position} />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
       />
-      <Marker position={position}>
-        <Popup>
+      <Marker 
+        position={position}
+        icon={L.divIcon({
+          className: 'custom-marker',
+          html: '<div class="marker-pin"></div>',
+          iconSize: [30, 30],
+          iconAnchor: [15, 30]
+        })}
+      >
+        <Popup className="custom-popup">
           {locationName}
         </Popup>
       </Marker>
