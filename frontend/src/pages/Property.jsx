@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import React, { useMemo, useEffect, useCallback } from 'react';
 import { getProperty } from '../utils/api';
@@ -9,34 +9,34 @@ import { useNavigate } from 'react-router-dom';
 import { CgRuler } from 'react-icons/cg';
 import { FaLocationDot } from 'react-icons/fa6';
 import Map from '../components/Map';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const Property = () => {
+  const { propertyId } = useParams();
   const navigate = useNavigate();
-  const { pathname } = useLocation();
-  const id = pathname.split('/').slice(-1)[0];
 
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['property', id],
-    queryFn: () => getProperty(id),
+  const { data: property, isLoading, error } = useQuery({
+    queryKey: ['property', propertyId],
+    queryFn: () => getProperty(propertyId),
   });
 
   const logState = useMemo(() => {
     let errorMessage = '';
-    if (isError) {
+    if (error) {
       errorMessage =
         error instanceof Error
           ? error.message
           : 'An unknown error occurred while fetching property';
     }
     return {
-      hasData: Boolean(data),
-      dataLength: data?.length,
-      isError,
+      hasData: Boolean(property),
+      dataLength: property?.length,
+      isError: Boolean(error),
       isLoading,
       errorMessage,
       renderTime: `${performance.now()}ms`,
     };
-  }, [data, isError, isLoading, error]);
+  }, [property, error, isLoading]);
 
   // Format price to Rands with 1000 separators
   const formatPrice = (price) => {
@@ -45,21 +45,21 @@ const Property = () => {
 
   // Improved facilities handling with better type checking and defaults
   const facilities = React.useMemo(() => {
-    if (!data?.facilities || !Array.isArray(data?.facilities)) {
+    if (!property?.facilities || !Array.isArray(property?.facilities)) {
       return { bedrooms: 0, bathrooms: 0, parkings: 0 };
     }
-    return data?.facilities[0] || { bedrooms: 0, bathrooms: 0, parkings: 0 };
-  }, [data?.facilities]);
+    return property?.facilities[0] || { bedrooms: 0, bathrooms: 0, parkings: 0 };
+  }, [property?.facilities]);
 
   useEffect(() => {
     console.log('[Property] Component state:', logState);
   }, [logState]);
 
   useEffect(() => {
-    if (isError) {
+    if (error) {
       console.error('[Property] Error fetching property:', error);
     }
-  }, [isError, error]);
+  }, [error]);
 
   useEffect(() => {
     if (isLoading) {
@@ -73,40 +73,19 @@ const Property = () => {
     return imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
   };
 
-  /*  const propertyList = useMemo(() => {
-    if (!data) return [];
-    return data
-      .filter(property => property !== null)
-      .map((property) => (
-        <Item 
-          key={property._id || property.title} 
-          property={{
-            ...property,
-            area: property.area || 0
-          }} 
-        />
-      ));
-  }, [data]);
-*/
-
   // Show loading state if data is not yet available or loading
-  if (isLoading || !data) {
+  if (isLoading || !property) {
     return (
       <main>
         <div className='flex justify-center items-center h-screen'>
-          <PuffLoader
-            size={60}
-            color={'#123abc'}
-            loading={true}
-            aria-label='puff-loading'
-          />
+          <LoadingSpinner />
         </div>
       </main>
     );
   }
 
   // After all hooks, we can have conditional returns
-  if (isError) {
+  if (error) {
     return (
       <main>
         <div className='max-padd-container my-[99px]'>
@@ -125,8 +104,8 @@ const Property = () => {
       {/* Image container */}
       <div className="relative w-full h-[27rem] rounded-lg overflow-hidden mb-8">
         <img
-          src={getImageUrl(data?.image)}
-          alt={data?.title}
+          src={getImageUrl(property?.image)}
+          alt={property?.title}
           className="w-full h-full object-cover"
           style={{
             objectPosition: "center",
@@ -142,11 +121,11 @@ const Property = () => {
       <div className="xl:flex xl:items-start gap-12 mt-8">
         {/* LHS */}
         <div className="flex-1">
-          <h5 className="bold-16 my-1 text-secondary">{data?.city}</h5>
+          <h5 className="bold-16 my-1 text-secondary">{property?.city}</h5>
           <div className="flexBetween">
-            <h4 className="medium-18 line-clamp-1 ">{data?.title}</h4>
+            <h4 className="medium-18 line-clamp-1 ">{property?.title}</h4>
             <div className="bold-20 xl:line-clamp-none">
-              {formatPrice(data?.price)}
+              {formatPrice(property?.price)}
             </div>
           </div>
           {/* Property Info */}
@@ -161,22 +140,22 @@ const Property = () => {
               <MdOutlineGarage /> {Number(facilities?.parkings) || 0}
             </div>
             <div className="flexCenter gap-x-2 border-r border-slate-900/50 pr-4 font-[500]">
-              <CgRuler /> {Number(data?.area) || 0}
+              <CgRuler /> {Number(property?.area) || 0}
             </div>
           </div>
-          <p className="pt-2 mb-4">{data?.description}</p>
+          <p className="pt-2 mb-4">{property?.description}</p>
           <div className="flexStart gap-x-2 items-center">
             <FaLocationDot />
             <div>
-              <p className="text-secondary">{data?.address}</p>
-              <p className="text-gray-500 text-sm">{data?.city}, {data?.country || 'South Africa'}</p>
+              <p className="text-secondary">{property?.address}</p>
+              <p className="text-gray-500 text-sm">{property?.city}, {property?.country || 'South Africa'}</p>
             </div>
           </div>
           <div className="flex gap-x-2 mt-4">
             <button
               onClick={(e) => {
                 e.stopPropagation(); // Prevent triggering parent onClick
-                navigate(`../listings/${data?.id}`);
+                navigate(`../listings/${property?.id}`);
               }}
               className="btn-secondary rounded-lg shadow-ms w-full mt-2"
             >
@@ -185,7 +164,7 @@ const Property = () => {
             <button
               onClick={(e) => {
                 e.stopPropagation(); // Prevent triggering parent onClick
-                navigate(`../listings/${data?.id}`);
+                navigate(`../listings/${property?.id}`);
               }}
               className="btn-secondary rounded-lg shadow-ms w-full mt-2"
             >
@@ -196,8 +175,8 @@ const Property = () => {
         {/* RHS */}
         <div className="flex-1 mt-8 xl:mt-0">
           <Map
-            address={data?.address}
-            city={data?.city}
+            address={property?.address}
+            city={property?.city}
             country="South Africa"
           />
         </div>
