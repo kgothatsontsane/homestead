@@ -6,7 +6,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import Navbar from './Navbar'
 import { MdClose, MdMenu } from 'react-icons/md'
-import { SignInButton, useAuth, useClerk } from "@clerk/clerk-react"
+import { useAuth, useClerk } from "@clerk/clerk-react"
 
 const userIcon = new URL('../assets/user.svg', import.meta.url).href
 
@@ -127,16 +127,17 @@ const Header = () => {
                     className="btn-secondary flexCenter gap-x-2 medium-16 rounded-xl"
                   >
                     <img src={userIcon} alt="" height={22} width={22} />
-                    <span>Logout ({user?.firstName})</span>
+                    <span>Logout {user?.firstName}</span>
                   </button>
                 </>
               ) : (
-                <SignInButton mode="modal">
-                  <button className="btn-secondary flexCenter gap-x-2 medium-16 rounded-xl">
-                    <img src={userIcon} alt="" height={22} width={22} />
-                    <span>Login</span>
-                  </button>
-                </SignInButton>
+                <Link 
+                  to="/sign-in"
+                  className="btn-secondary flexCenter gap-x-2 medium-16 rounded-xl"
+                >
+                  <img src={userIcon} alt="" height={22} width={22} />
+                  <span>Login</span>
+                </Link>
               )}
             </div>
           </div>
