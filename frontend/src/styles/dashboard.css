@@ -1,0 +1,23 @@
+.dashboard-content {
+  @apply bg-white rounded-xl shadow-sm p-6;
+}
+
+.dashboard-card {
+  @apply bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow;
+}
+
+.dashboard-stat {
+  @apply flex flex-col p-6 bg-white rounded-xl shadow-sm;
+}
+
+.dashboard-stat-value {
+  @apply text-3xl font-bold text-gray-900;
+}
+
+.dashboard-stat-label {
+  @apply text-sm text-gray-500 mt-1;
+}
+
+.dashboard-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+}
