@@ -3,9 +3,10 @@
  * @module components/Header
  */
 import React, { useState, useEffect, useCallback } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import Navbar from './Navbar'
 import { MdClose, MdMenu } from 'react-icons/md'
+import { SignInButton, useAuth, useClerk } from "@clerk/clerk-react"
 
 const userIcon = new URL('../assets/user.svg', import.meta.url).href
 
@@ -18,6 +19,9 @@ const Header = () => {
   const [active, setActive] = useState(false)
   const [menuOpened, setMenuOpened] = useState(false)
   const [lastScrollY, setLastScrollY] = useState(0)
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isOnDashboard = location.pathname === '/dashboard';
 
   // Performance monitoring for scroll events
   const handleScroll = useCallback(() => {
@@ -48,6 +52,21 @@ const Header = () => {
     // Log interaction for analytics
     console.log('[Header] Menu toggled:', !menuOpened)
   }
+
+  const { isSignedIn, user } = useAuth();
+  const { signOut } = useClerk();
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
+  const handleDashboard = () => {
+    navigate('/dashboard');
+  };
 
   return (
     <header className="fixed top-0 left-0 w-full z-50">
@@ -91,10 +110,34 @@ const Header = () => {
                   className="xl:hidden cursor-pointer text-3xl hover:text-secondary"
                 />
               )}
-              <button className="btn-secondary flexCenter gap-x-2 medium-16 rounded-xl">
-                <img src={userIcon} alt="" height={22} width={22} />
-                <span>Login</span>
-              </button>
+              {isSignedIn ? (
+                <>
+                  <button 
+                    onClick={handleDashboard}
+                    className={`${
+                      isOnDashboard 
+                        ? 'bg-gray-900 text-white hover:bg-secondary' // Active: black filled, hover secondary
+                        : 'border border-gray-900 text-gray-900 hover:bg-secondary hover:text-white hover:border-secondary' // Inactive: black outline, hover secondary
+                    } flexCenter gap-x-2 medium-16 rounded-xl px-4 py-2 transition-colors duration-200`}
+                  >
+                    Dashboard
+                  </button>
+                  <button 
+                    onClick={handleLogout}
+                    className="btn-secondary flexCenter gap-x-2 medium-16 rounded-xl"
+                  >
+                    <img src={userIcon} alt="" height={22} width={22} />
+                    <span>Logout ({user?.firstName})</span>
+                  </button>
+                </>
+              ) : (
+                <SignInButton mode="modal">
+                  <button className="btn-secondary flexCenter gap-x-2 medium-16 rounded-xl">
+                    <img src={userIcon} alt="" height={22} width={22} />
+                    <span>Login</span>
+                  </button>
+                </SignInButton>
+              )}
             </div>
           </div>
         </div>
