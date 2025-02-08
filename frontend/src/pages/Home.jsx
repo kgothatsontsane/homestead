@@ -6,6 +6,8 @@ import React, { useEffect, useRef } from 'react'
 import Hero from '../components/Hero'
 import About from '../components/About'
 import Properties from '../components/Properties'
+import { useLoading } from '../contexts/LoadingContext';
+import { globalPreloader } from '../utils/preloader';
 
 const featuredImg = new URL('../assets/featured.png', import.meta.url).href
 
@@ -15,21 +17,47 @@ const featuredImg = new URL('../assets/featured.png', import.meta.url).href
  * @description Main landing page with hero section, about section, and property listings
  */
 const Home = () => {
+  const { startLoading, updateProgress, stopLoading } = useLoading();
   const pageLoadTime = useRef(performance.now());
 
   // Monitor component performance
   useEffect(() => {
-    const loadTime = performance.now() - pageLoadTime.current;
-    console.log(`[Home] Page load time: ${loadTime.toFixed(2)}ms`);
+    const loadResources = async () => {
+      startLoading('Preparing your homestead experience...');
+      
+      try {
+        // Start with initial loading state
+        updateProgress(10, 'Loading essential resources...');
+        
+        // Preload critical images
+        await Promise.all([
+          globalPreloader.preloadImage(featuredImg),
+          // Add other critical images here
+        ]);
+        
+        updateProgress(40, 'Loading components...');
+        
+        // Preload components
+        await Promise.all([
+          globalPreloader.preloadComponent(() => import('../components/Hero')),
+          globalPreloader.preloadComponent(() => import('../components/About')),
+          globalPreloader.preloadComponent(() => import('../components/Properties'))
+        ]);
 
-    // Preload featured image for better performance
-    const img = new Image();
-    img.src = featuredImg;
+        updateProgress(80, 'Finalizing...');
 
-    return () => {
-      console.log(`[Home] Total page lifetime: ${(performance.now() - pageLoadTime.current).toFixed(2)}ms`);
+        // Artificial delay to show loading screen (remove in production)
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        stopLoading();
+      } catch (error) {
+        console.error('Error preloading resources:', error);
+        stopLoading();
+      }
     };
-  }, []);
+
+    loadResources();
+  }, [startLoading, updateProgress, stopLoading]);
 
   return (
     <main className="overflow-x-hidden">
