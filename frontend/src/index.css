@@ -108,6 +108,12 @@ html {
   background: #f8f8f8 !important;
 }
 
+/* Add these styles to your global CSS */
+.loading-screen {
+  isolation: isolate;
+  z-index: 9999;
+}
+
 @layer base {
   .active-link {
     @apply bg-secondary text-white;
@@ -357,5 +363,22 @@ html {
 
   .bold-15 {
     @apply text-[15px] font-[700];
+  }
+
+  /* Update existing button utilities */
+  .nav-button-base {
+    @apply rounded-lg px-4 py-2 transition-all duration-200 font-medium text-sm;
+  }
+
+  .nav-button-default {
+    @apply nav-button-base text-gray-700 hover:bg-gray-100;
+  }
+
+  .nav-button-primary {
+    @apply nav-button-base bg-secondary text-white hover:bg-tertiary;
+  }
+
+  .nav-button-outline {
+    @apply nav-button-base border border-secondary text-secondary hover:bg-secondary hover:text-white;
   }
 }
