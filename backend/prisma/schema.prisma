@@ -15,18 +15,32 @@ datasource db {
 
 model User {
   id               String     @id @default(auto()) @map("_id") @db.ObjectId
+  clerkId          String     @unique
   email            String     @unique
-  name             String?
+  username         String     @unique
+  first_name       String
+  last_name        String
+  roles            String[]   @default(["buyer"])  // Store all roles
+  activeRole       String     @default("buyer")    // Currently selected role
+  rolePermissions  Json?      // Store role-specific permissions
+  investorProfile  Json?      // For investor-specific data
+  tenantProfile    Json?      // For tenant-specific data
+  agentLicense     String?    // For agent verification
+  lastRoleUpdate   DateTime?  // Track when roles were last updated
+  onboardingComplete Boolean  @default(false)
   image            String?
-  bookedViewings   Json[]
-  favPropertiesID  String[]   @db.ObjectId
+  bookedViewings   Json[]     @default([])
+  favPropertiesID  String[]   @default([]) @db.ObjectId
   ownedProperties  Property[] @relation("Owner")
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
+
+  @@map("users")
+  @@index([activeRole, clerkId, roles]) // Combine all indexes into one
 }
 
 model Property {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   description String
   price       Int
@@ -34,13 +48,12 @@ model Property {
   image       String
   city        String
   country     String
-  area        Int?    // Make area optional by adding ?
-  facilities  Json[]
+  area        Int?     
+  facilities  Json[]   @default([])
   ownerEmail  String
-  owner       User   @relation("Owner", fields: [ownerEmail], references: [email])
+  owner       User     @relation("Owner", fields: [ownerEmail], references: [email])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique(fields: [address, ownerEmail])
+  @@unique([address, ownerEmail])
 }
