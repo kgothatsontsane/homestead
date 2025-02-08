@@ -3,6 +3,8 @@ import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaWhatsapp, FaFacebook, FaLinkedin
 import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import emailjs from '@emailjs/browser';
+import { debounce } from '../utils/debounce';
+import { scheduleCallback, throttleRAF } from '../utils/performance';
 
 /**
  * Custom debounce implementation with automatic cleanup
@@ -245,16 +247,26 @@ const Contact = () => {
     return Object.keys(errors).length === 0;
   }, []);
 
+  // Optimize validation with new debounce
   const debouncedValidation = useCallback(
-    createUniqueDebounce((data) => validateForm(data), 300),
+    debounce((data) => validateForm(data), 300, {
+      trailing: true,
+      maxWait: 500,
+      priority: 'low',
+      expensive: true
+    }),
     [validateForm]
   );
 
-  const handleChange = useCallback((e) => {
-    const newFormData = { ...formState.data, [e.target.name]: e.target.value };
-    setFormState((prevState) => ({ ...prevState, data: newFormData }));
-    debouncedValidation(newFormData);
-  }, [formState.data, debouncedValidation]);
+  // Optimize handleChange
+  const handleChange = useCallback(
+    throttleRAF((e) => {
+      const newFormData = { ...formState.data, [e.target.name]: e.target.value };
+      setFormState(prev => ({ ...prev, data: newFormData }));
+      debouncedValidation(newFormData);
+    }),
+    [formState.data, debouncedValidation]
+  );
 
   // Pre-initialize EmailJS with environment variable and validation
   useEffect(() => {
@@ -265,22 +277,23 @@ const Contact = () => {
     emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
   }, []);
 
-  // Optimized form submission with validation
+  // Optimize form submission
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
-    
     if (!validateEnvVariables()) {
-      toast.error('Unable to send message: Email service not configured');
-      return;
+      return toast.error('Unable to send message: Email service not configured');
     }
+
+    // Use RAF for state updates
+    requestAnimationFrame(() => {
+      setFormState(prev => ({ ...prev, isSubmitting: true }));
+    });
 
     const startTime = performance.now();
 
     if (!validateForm(formState.data)) {
       return;
     }
-
-    setFormState(prev => ({ ...prev, isSubmitting: true }));
 
     try {
       // Update template parameters to match EmailJS template variables
@@ -308,7 +321,9 @@ const Contact = () => {
       console.error('EmailJS Error:', error);
       toast.error('Failed to send message. Please try again.');
     } finally {
-      setFormState((prevState) => ({ ...prevState, isSubmitting: false }));
+      requestAnimationFrame(() => {
+        setFormState(prev => ({ ...prev, isSubmitting: false }));
+      });
       const endTime = performance.now();
       console.log(`Form submission took: ${(endTime - startTime).toFixed(2)}ms - ${evaluatePerformance('formSubmission', endTime - startTime)}`);
     }
