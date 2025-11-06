@@ -86,7 +86,11 @@ const createCustomQueryClient = () => {
 const ErrorFallback = ({ error }) => (
   <div className="p-6 bg-blue-50 m-4 rounded">
     <h2 className="text-blue-800 text-xl font-bold mb-2">Something went wrong:</h2>
-    <pre className="text-sm text-blue-600">{error.message}</pre>
+    <pre className="text-sm text-blue-600">
+      {import.meta.env.MODE === 'development'
+        ? error.message
+        : "An unexpected error occurred. Please try again later."}
+    </pre>
   </div>
 );
 
