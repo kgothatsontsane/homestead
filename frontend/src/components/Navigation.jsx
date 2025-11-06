@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { useUser } from 'some-auth-library';
+import { useUser } from '@clerk/clerk-react';
 import RoleSwitcher from './RoleSwitcher';
 
 const Navigation = () => {
