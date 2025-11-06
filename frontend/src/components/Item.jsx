@@ -28,6 +28,10 @@ const Item = ({ property }) => {
   
   const navigate = useNavigate();
   
+  const handleClick = () => {
+    navigate(`/listings/${property.id}`);
+  };
+
   // Improved facilities handling with better type checking and defaults
   const facilities = React.useMemo(() => {
     if (!property.facilities || !Array.isArray(property.facilities)) {
@@ -38,8 +42,8 @@ const Item = ({ property }) => {
 
   return (
     <div
-      onClick={() => navigate(`../listings/${property.id}`)}
-      className="rounded-xl p-5 bg-white cursor-pointer"
+      onClick={handleClick}
+      className="rounded-xl p-5 bg-white cursor-pointer hover:shadow-lg transition-shadow"
       key={property.id}
     >
       <div className="pb-2 relative">

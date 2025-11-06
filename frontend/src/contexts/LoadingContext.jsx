@@ -1,43 +1,20 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
-import { globalPreloader } from '../utils/preloader';
+import React, { createContext, useContext, useState } from 'react';
 
-const LoadingContext = createContext({});
+const LoadingContext = createContext();
 
 export const LoadingProvider = ({ children }) => {
-  const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [message, setMessage] = useState('');
-
-  const startLoading = useCallback((initialMessage = 'Loading...') => {
-    setLoading(true);
-    setProgress(0);
-    setMessage(initialMessage);
-    globalPreloader.reset();
-  }, []);
-
-  const updateProgress = useCallback((newProgress, newMessage) => {
-    setProgress(newProgress);
-    if (newMessage) setMessage(newMessage);
-  }, []);
-
-  const stopLoading = useCallback(() => {
-    setLoading(false);
-    setProgress(100);
-    globalPreloader.reset();
-  }, []);
-
+  // Remove local loading state since it's handled at App level
   return (
-    <LoadingContext.Provider value={{
-      loading,
-      progress,
-      message,
-      startLoading,
-      updateProgress,
-      stopLoading
-    }}>
+    <LoadingContext.Provider value={{}}>
       {children}
     </LoadingContext.Provider>
   );
 };
 
-export const useLoading = () => useContext(LoadingContext);
+export const useLoading = () => {
+  const context = useContext(LoadingContext);
+  if (!context) {
+    throw new Error('useLoading must be used within LoadingProvider');
+  }
+  return context;
+};

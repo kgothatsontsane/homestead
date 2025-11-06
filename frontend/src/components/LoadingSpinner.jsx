@@ -1,26 +1,12 @@
-import { PuffLoader } from 'react-spinners';
-import { motion } from 'framer-motion';
-import { useTheme } from '../hooks/useTheme';
+import React from 'react';
 
-const LoadingSpinner = ({ size = 40, showProgress = false, progress = 0 }) => {
-  const { secondary } = useTheme();
-
-  return (
-    <div className="flex flex-col items-center justify-center w-full h-full min-h-[200px] gap-4">
-      <PuffLoader color={secondary} size={size} />
-      
-      {showProgress && (
-        <div className="w-48 bg-secondary/10 rounded-full h-2 overflow-hidden">
-          <motion.div
-            className="h-full bg-secondary"
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.5 }}
-          />
-        </div>
-      )}
+const LoadingSpinner = ({ message }) => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="text-center">
+      <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+      <p className="text-gray-600">{message || 'Loading...'}</p>
     </div>
-  );
-};
+  </div>
+);
 
 export default LoadingSpinner;

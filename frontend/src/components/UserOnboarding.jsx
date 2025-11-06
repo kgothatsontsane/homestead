@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react';
-import { ROLES } from '../utils/userRoles';
+import { ROLES, ROLE_COMBINATIONS, getRoleDisplay } from '../utils/userRoles';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaHome, FaBuilding, FaUserTie, FaSearch, FaPlus, FaChartLine, FaKey } from 'react-icons/fa';
-import { syncUserData, verifyUserRoles } from '../services/userService';
+import { FaHome, FaBuilding, FaUserTie, FaSearch, FaPlus, FaChartLine, FaKey, FaQuestionCircle } from 'react-icons/fa';
+import { syncUserData, verifyUserRoles, updateUserProfile, syncUserRoles } from '../services/userService';
 import { getRandomBackground } from '../utils/backgroundImages';
+import { getUserRole } from '../utils/roleUtils';
+import { ErrorBoundary } from 'react-error-boundary';
+import { toast } from 'react-toastify';
 
 const ProgressIndicator = ({ currentStep }) => (
   <div className="absolute top-8 right-8 flex items-center gap-2">
@@ -41,13 +44,14 @@ const INITIAL_ROLES = [
 
 const StepContainer = ({ children, bgImage }) => (
   <div 
-    className="min-h-screen flex items-center justify-center p-4 bg-cover bg-center"
+    className="min-h-screen py-16 px-4 flex items-center justify-center bg-cover bg-center"
     style={{ 
-      backgroundImage: `linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.7)), url(${bgImage})` 
+      backgroundImage: `linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.7)), url(${bgImage})`,
+      minHeight: 'calc(100vh - 0px)' // Remove any potential layout padding
     }}
   >
     <motion.div 
-      className="max-w-2xl w-full bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl p-8 relative"
+      className="max-w-2xl w-full bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl p-8 relative my-auto"
     >
       {children}
     </motion.div>
@@ -59,6 +63,12 @@ const STEP_CONFIG = {
     title: "Choose Your Primary Role",
     subtitle: "How do you primarily want to use Homestead?",
     options: [
+      {
+        role: ROLES.UNSET,
+        title: "I'm not sure yet",
+        description: "Browse all features before deciding",
+        icon: FaQuestionCircle
+      },
       {
         role: ROLES.BUYER,
         title: "Home Buyer",
@@ -101,6 +111,29 @@ const STEP_CONFIG = {
   }
 };
 
+// Add role icons mapping for step 2
+const ROLE_ICONS = {
+  [ROLES.UNSET]: FaQuestionCircle,
+  [ROLES.BUYER]: FaSearch,
+  [ROLES.AGENT]: FaUserTie,
+  [ROLES.OWNER]: FaBuilding,
+  [ROLES.INVESTOR]: FaChartLine,
+  [ROLES.TENANT]: FaKey
+};
+
+const ErrorFallback = ({ error }) => (
+  <div className="p-6 bg-red-50 m-4 rounded">
+    <h2 className="text-red-800 text-xl font-bold mb-2">Something went wrong:</h2>
+    <pre className="text-sm text-red-600">{error.message}</pre>
+    <button 
+      onClick={() => window.location.reload()}
+      className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+    >
+      Try again
+    </button>
+  </div>
+);
+
 const UserOnboarding = () => {
   const { user } = useUser();
   const navigate = useNavigate();
@@ -117,23 +150,98 @@ const UserOnboarding = () => {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handlePrimaryRoleSelect = (role) => {
-    setFormData(prev => ({
-      ...prev,
-      primaryRole: role,
-      roles: [role]
-    }));
-    // Only show step 2 for Agent or Owner
-    setStep(role === ROLES.BUYER ? 3 : 2);
+  useEffect(() => {
+    const currentRole = getUserRole(user);
+    console.log('Onboarding check:', { 
+      userId: user?.id, 
+      currentRole,
+      hasRole: Boolean(currentRole)
+    });
+
+    // Initialize role if not set - removed automatic 'buyer' assignment
+    if (!currentRole) {
+      user?.update({
+        unsafeMetadata: {
+          ...user.unsafeMetadata,
+          roles: [ROLES.UNSET],
+          primaryRole: ROLES.UNSET
+        }
+      });
+    }
+  }, [user]);
+
+  useEffect(() => {
+    // Force role check on mount
+    if (user?.id) {
+      const roles = user.publicMetadata?.roles || [];
+      const hasValidRole = roles.length > 0 && !roles.includes(ROLES.UNSET);
+      
+      if (!hasValidRole) {
+        setStep(1); // Force to role selection step
+      }
+    }
+  }, [user]);
+
+  const handleRoleSelection = async (role) => {
+    console.log('Attempting role selection:', role);
+    try {
+      if (!user?.id) {
+        toast.error('User session not found');
+        return;
+      }
+
+      setIsSubmitting(true);
+      
+      // Create roles array
+      const initialRoles = [role];
+      
+      try {
+        // Update Clerk metadata - using unsafeMetadata instead of publicMetadata
+        await user.update({
+          unsafeMetadata: {  // Changed from publicMetadata to unsafeMetadata
+            ...user.unsafeMetadata,
+            roles: initialRoles,
+            primaryRole: role,
+            lastUpdated: new Date().toISOString()
+          }
+        });
+
+        // Sync with database
+        const syncResult = await syncUserRoles(user.id, initialRoles, role);
+        console.log('Sync result:', syncResult);
+
+        // Update local state
+        setFormData(prev => ({
+          ...prev,
+          primaryRole: role,
+          roles: initialRoles // Important: Set the roles array
+        }));
+
+        toast.success('Role updated successfully');
+        setStep(2); // Move to next step
+      } catch (error) {
+        throw new Error(`Role sync failed: ${error.message}`);
+      }
+    } catch (error) {
+      console.error('Role selection error:', error);
+      toast.error(error.message || 'Failed to set role');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleAdditionalRole = (role) => {
-    setFormData(prev => ({
-      ...prev,
-      roles: prev.roles.includes(role)
-        ? prev.roles.filter(r => r !== role)
-        : [...prev.roles, role]
-    }));
+  const handleAdditionalRole = async (role) => {
+    try {
+      const newRoles = formData.roles.includes(role)
+        ? formData.roles.filter(r => r !== role)
+        : [...formData.roles, role];
+
+      await syncUserRoles(user.id, newRoles, formData.primaryRole);
+      setFormData(prev => ({ ...prev, roles: newRoles }));
+    } catch (error) {
+      console.error('Additional role update error:', error);  
+      toast.error('Failed to update roles');
+    }
   };
 
   const renderStep1 = () => (
@@ -146,10 +254,14 @@ const UserOnboarding = () => {
         {STEP_CONFIG[1].options.map(({ role, title, description, icon: Icon }) => (
           <motion.button
             key={role}
-            onClick={() => handlePrimaryRoleSelect(role)}
-            className="w-full p-6 text-left border-2 border-white/20 rounded-xl 
-              hover:bg-white/10 transition-all group"
-            whileHover={{ scale: 1.01 }}
+            onClick={() => {
+              console.log('Button clicked for role:', role); // Debug log
+              handleRoleSelection(role);
+            }}
+            disabled={isSubmitting}
+            className={`w-full p-6 text-left border-2 border-white/20 rounded-xl 
+              hover:bg-white/10 transition-all group ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+            whileHover={{ scale: isSubmitting ? 1 : 1.01 }}
           >
             <div className="flex items-start gap-4">
               <div className="p-3 bg-primary/20 rounded-full">
@@ -167,7 +279,9 @@ const UserOnboarding = () => {
   );
 
   const renderStep2 = () => {
-    const availableCombinations = ROLE_COMBINATIONS[formData.primaryRole]?.allowedCombinations || [];
+    const availableRoles = Object.values(ROLES).filter(role => 
+      role !== formData.primaryRole && role !== ROLES.ADMIN && role !== ROLES.UNSET
+    );
     
     return (
       <>
@@ -178,44 +292,49 @@ const UserOnboarding = () => {
           </p>
         </div>
         <div className="space-y-4">
-          {availableCombinations.map(role => (
-            <motion.button
-              key={role}
-              onClick={() => handleAdditionalRole(role)}
-              className="w-full p-4 text-left border-2 border-white/20 rounded-xl 
-                hover:bg-white/10 transition-all"
-              whileHover={{ scale: 1.01 }}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-medium text-white">{getRoleDisplay(role)}</div>
-                  <p className="text-sm text-gray-300">
-                    {role === ROLES.BUYER ? "Browse and purchase properties" : 
-                     role === ROLES.INVESTOR ? "Invest in properties" :
-                     role === ROLES.AGENT ? "List and sell properties" :
-                     "Manage your properties"}
-                  </p>
+          {availableRoles.map(role => {
+            const roleConfig = STEP_CONFIG[1].options.find(opt => opt.role === role);
+            const Icon = ROLE_ICONS[role] || FaBuilding; // Fallback icon
+
+            return (
+              <motion.button
+                key={role}
+                onClick={() => handleAdditionalRole(role)}
+                className="w-full p-4 text-left border-2 border-white/20 rounded-xl 
+                  hover:bg-white/10 transition-all"
+                whileHover={{ scale: 1.01 }}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 bg-primary/20 rounded-full">
+                      <Icon className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-white">{getRoleDisplay(role)}</div>
+                      <p className="text-sm text-gray-300">{roleConfig?.description || 'Additional role capabilities'}</p>
+                    </div>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={formData.roles.includes(role)}
+                    onChange={() => handleAdditionalRole(role)}
+                    className="h-5 w-5 rounded border-white/20 bg-white/10 text-primary focus:ring-primary"
+                  />
                 </div>
-                <input
-                  type="checkbox"
-                  checked={formData.roles.includes(role)}
-                  onChange={() => handleAdditionalRole(role)}
-                  className="h-5 w-5 rounded border-white/20 bg-white/10"
-                />
-              </div>
-            </motion.button>
-          ))}
+              </motion.button>
+            );
+          })}
         </div>
         <div className="mt-8 flex justify-between">
           <button
             onClick={() => setStep(1)}
-            className="px-6 py-2 text-white/80 hover:text-white"
+            className="px-6 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20"
           >
             ← Back
           </button>
           <button
             onClick={() => setStep(3)}
-            className="px-6 py-2 bg-primary text-white rounded-lg"
+            className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
           >
             Continue →
           </button>
@@ -261,41 +380,49 @@ const UserOnboarding = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+
     try {
-      console.log('🚀 Starting user onboarding completion...');
-      
-      const syncResult = await syncUserData({
-        user,
+      // Update Clerk profile first
+      await user.update({
         firstName: formData.firstName,
         lastName: formData.lastName,
-        username: formData.username,
-        roles: formData.roles
+        username: formData.username
       });
-      
-      // Verify roles were synced correctly
-      const verification = await verifyUserRoles(user.id);
-      
-      if (!verification.rolesMatch) {
-        console.error('⚠️ Role mismatch detected:', verification);
-        toast.warning('Role synchronization issue detected');
-      }
 
-      console.log('✅ Onboarding complete:', { syncResult, verification });
+      // Then update our database
+      await updateUserProfile({
+        user,
+        ...formData,
+        onboardingComplete: true
+      });
+
+      toast.success('Profile completed successfully!');
       navigate('/dashboard');
     } catch (error) {
-      console.error('❌ Onboarding failed:', error);
-      setIsSubmitting(false);
+      console.error('Profile update failed:', error);
       toast.error('Failed to complete setup');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  // Add debug logging to step state changes
+  useEffect(() => {
+    console.log('Current step:', step);
+    console.log('Current formData:', formData);
+  }, [step, formData]);
+
   return (
-    <StepContainer bgImage={bgImage}>
-      <ProgressIndicator currentStep={step} />
-      {step === 1 && renderStep1()}
-      {step === 2 && renderStep2()}
-      {step === 3 && renderPersonalDetails()}
-    </StepContainer>
+    <div className="min-h-screen w-full bg-black">
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <StepContainer bgImage={bgImage}>
+          <ProgressIndicator currentStep={step} />
+          {step === 1 && renderStep1()}
+          {step === 2 && renderStep2()}
+          {step === 3 && renderPersonalDetails()}
+        </StepContainer>
+      </ErrorBoundary>
+    </div>
   );
 };
 

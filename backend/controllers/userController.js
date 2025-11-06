@@ -449,3 +449,78 @@ export const switchActiveRole = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Failed to switch active role" });
   }
 });
+
+export const updateUserRole = async (req, res) => {
+  const { userId } = req.params;
+  const { role, previousRole } = req.body;
+
+  console.log('📝 Role update request received:', { userId, role, previousRole });
+
+  try {
+    // Update Clerk metadata
+    const clerkUser = await clerkClient.users.updateUser(userId, {
+      publicMetadata: {
+        role,
+        previousRole,
+        updatedAt: new Date().toISOString()
+      }
+    });
+    console.log('✅ Clerk update successful:', clerkUser.publicMetadata);
+
+    // Update database
+    const dbUser = await prisma.user.upsert({
+      where: { clerkId: userId },
+      update: {
+        role,
+        previousRole,
+        updatedAt: new Date()
+      },
+      create: {
+        clerkId: userId,
+        role,
+        previousRole
+      }
+    });
+    console.log('✅ Database update successful:', dbUser);
+
+    res.json({ 
+      message: 'Role updated successfully',
+      clerk: clerkUser.publicMetadata,
+      database: dbUser
+    });
+
+  } catch (error) {
+    console.error('❌ Role update failed:', error);
+    res.status(500).json({ 
+      error: 'Failed to update role',
+      details: error.message
+    });
+  }
+};
+
+export const syncUserData = async (req, res) => {
+  const { clerkId, roles, primaryRole, ...userData } = req.body;
+
+  try {
+    const user = await prisma.user.upsert({
+      where: { clerkId },
+      update: {
+        ...userData,
+        roles,
+        primaryRole,
+        updatedAt: new Date()
+      },
+      create: {
+        clerkId,
+        ...userData,
+        roles,
+        primaryRole
+      }
+    });
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Sync failed:', error);
+    res.status(500).json({ error: error.message });
+  }
+};

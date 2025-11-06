@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["multiSchema", "fullTextSearch"]
 }
 
 datasource db {
@@ -14,29 +15,43 @@ datasource db {
 }
 
 model User {
-  id               String     @id @default(auto()) @map("_id") @db.ObjectId
+  id                String     @id @default(auto()) @map("_id") @db.ObjectId
   clerkId          String     @unique
   email            String     @unique
   username         String     @unique
   first_name       String
   last_name        String
-  roles            String[]   @default(["buyer"])  // Store all roles
-  activeRole       String     @default("buyer")    // Currently selected role
-  rolePermissions  Json?      // Store role-specific permissions
-  investorProfile  Json?      // For investor-specific data
-  tenantProfile    Json?      // For tenant-specific data
-  agentLicense     String?    // For agent verification
-  lastRoleUpdate   DateTime?  // Track when roles were last updated
-  onboardingComplete Boolean  @default(false)
+  
+  // Enhanced role management
+  roles            String[]   @default(["unset"])  // All assigned roles
+  primaryRole      String     @default("unset")    // Main role
+  activeRole       String     @default("unset")    // Currently selected role
+  roleHistory      Json[]     // Track role changes and timestamps
+  
+  // Role-specific profiles
+  buyerProfile     Json?      // Buyer preferences, saved searches
+  agentProfile     Json?      // Agent license, listings, ratings
+  ownerProfile     Json?      // Owned properties, documents
+  investorProfile  Json?      // Investment portfolio, preferences
+  tenantProfile    Json?      // Rental history, preferences
+  
+  // Role-based permissions
+  canList          Boolean    @default(false)      // Can create listings
+  canViewAnalytics Boolean    @default(false)      // Can view advanced analytics
+  customPermissions Json?     // Additional role-specific permissions
+  
+  // Standard fields
   image            String?
   bookedViewings   Json[]     @default([])
   favPropertiesID  String[]   @default([]) @db.ObjectId
   ownedProperties  Property[] @relation("Owner")
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
+  lastRoleUpdate   DateTime?
+  onboardingComplete Boolean  @default(false)
 
+  @@index([primaryRole, activeRole, roles])
   @@map("users")
-  @@index([activeRole, clerkId, roles]) // Combine all indexes into one
 }
 
 model Property {

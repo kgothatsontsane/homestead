@@ -6,7 +6,7 @@ export class Preloader {
     this.loaded = 0;
   }
 
-  async preloadImage(src) {
+  async preloadImage(src, delay = 0) {
     if (this.cache.has(src)) {
       return this.cache.get(src);
     }
@@ -16,7 +16,10 @@ export class Preloader {
     try {
       const img = new Image();
       const promise = new Promise((resolve, reject) => {
-        img.onload = () => {
+        img.onload = async () => {
+          if (delay) {
+            await new Promise(r => setTimeout(r, delay));
+          }
           this.loaded++;
           this.progress = (this.loaded / this.total) * 100;
           resolve(img);

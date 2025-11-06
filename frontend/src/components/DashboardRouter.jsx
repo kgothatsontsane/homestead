@@ -5,7 +5,7 @@ import AgentDashboard from '../pages/dashboards/AgentDashboard';
 import BuyerDashboard from '../pages/dashboards/BuyerDashboard';
 import LoadingScreen from '../components/LoadingScreen';
 import { ROLES } from '../utils/userRoles';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import DashboardLayout from './layouts/DashboardLayout';
 import { useRolePermissions } from '../hooks/useRolePermissions';
 import { verifyUserRoles } from '../services/userService';
@@ -19,6 +19,8 @@ import TenantDashboard from '../pages/dashboards/TenantDashboard';
 import PropertyOwnerDashboard from '../pages/dashboards/PropertyOwnerDashboard';
 import Analytics from '../pages/Analytics';
 import MaintenanceRequests from '../pages/MaintenanceRequests';
+import { useRoleVerification } from '../hooks/useRoleVerification';
+import LoadingSpinner from './LoadingSpinner';
 
 const LoadingState = ({ message }) => (
   <div className="flex items-center justify-center min-h-screen">
@@ -34,6 +36,17 @@ const DashboardRouter = () => {
   const { user, isLoaded } = useUser();
   const { activeRole, roles } = useRolePermissions();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [bgClass, setBgClass] = useState('');
+  const isRoleVerified = useRoleVerification();
+
+  // Move background handling to a separate effect
+  useEffect(() => {
+    // Only update background if we're actually on a dashboard route
+    if (!location.pathname.includes('/listings/create')) {
+      setBgClass('bg-dashboard'); // or whatever your default dashboard bg is
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     if (!isLoaded || !user) return;
@@ -64,6 +77,10 @@ const DashboardRouter = () => {
     verifyRoles();
   }, [isLoaded, user]);
 
+  if (!isRoleVerified) {
+    return <LoadingSpinner message="Verifying access..." />;
+  }
+
   if (!isLoaded) {
     return <LoadingState message="Loading..." />;
   }
@@ -90,42 +107,44 @@ const DashboardRouter = () => {
   };
 
   return (
-    <DashboardLayout>
-      <Routes>
-        <Route index element={getDashboardComponent()} />
-        <Route path="home" element={getDashboardComponent()} />
-        <Route path="listings">
-          <Route index element={
-            <ProtectedRoute requiredPermission={PERMISSIONS.VIEW_LISTINGS}>
-              <ListingsView />
-            </ProtectedRoute>
-          } />
-          <Route path="create" element={
-            <ProtectedRoute requiredPermission={PERMISSIONS.CREATE_LISTING}>
-              <CreateListing />
-            </ProtectedRoute>
-          } />
-          <Route path="edit/:id" element={
-            <ProtectedRoute requiredPermission={PERMISSIONS.EDIT_LISTING}>
-              <EditListing />
-            </ProtectedRoute>
-          } />
-        </Route>
+    <div className={bgClass}>
+      <DashboardLayout>
+        <Routes>
+          <Route index element={getDashboardComponent()} />
+          <Route path="home" element={getDashboardComponent()} />
+          <Route path="listings">
+            <Route index element={
+              <ProtectedRoute requiredPermission={PERMISSIONS.VIEW_LISTINGS}>
+                <ListingsView />
+              </ProtectedRoute>
+            } />
+            <Route path="create" element={
+              <ProtectedRoute requiredPermission={PERMISSIONS.CREATE_LISTING}>
+                <CreateListing />
+              </ProtectedRoute>
+            } />
+            <Route path="edit/:id" element={
+              <ProtectedRoute requiredPermission={PERMISSIONS.EDIT_LISTING}>
+                <EditListing />
+              </ProtectedRoute>
+            } />
+          </Route>
 
-        <Route path="analytics" element={
-          <ProtectedRoute requiredPermission={PERMISSIONS.VIEW_ANALYTICS}>
-            <Analytics />
-          </ProtectedRoute>
-        } />
+          <Route path="analytics" element={
+            <ProtectedRoute requiredPermission={PERMISSIONS.VIEW_ANALYTICS}>
+              <Analytics />
+            </ProtectedRoute>
+          } />
 
-        <Route path="maintenance" element={
-          <ProtectedRoute requiredPermission={PERMISSIONS.SUBMIT_MAINTENANCE}>
-            <MaintenanceRequests />
-          </ProtectedRoute>
-        } />
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
-      </Routes>
-    </DashboardLayout>
+          <Route path="maintenance" element={
+            <ProtectedRoute requiredPermission={PERMISSIONS.SUBMIT_MAINTENANCE}>
+              <MaintenanceRequests />
+            </ProtectedRoute>
+          } />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </DashboardLayout>
+    </div>
   );
 };
 

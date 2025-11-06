@@ -37,4 +37,32 @@ router.get('/:userId', async (req, res) => {
   }
 });
 
+router.post('/sync-roles/:userId', async (req, res) => {
+  const { userId } = req.params;
+  const { roles, primaryRole } = req.body;
+
+  try {
+    const user = await prisma.user.upsert({
+      where: { clerkId: userId },
+      update: {
+        roles,
+        primaryRole,
+        lastUpdated: new Date()
+      },
+      create: {
+        clerkId: userId,
+        roles,
+        primaryRole,
+        // Don't set default role to 'buyer'
+        lastUpdated: new Date()
+      }
+    });
+
+    res.json(user);
+  } catch (error) {
+    console.error('Role sync error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;

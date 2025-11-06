@@ -24,5 +24,5 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 })
 
-app.use('/api/user', userRoute);
+app.use('/', userRoute); // Use root path for user routes
 app.use('/api/property', propertyRoute);

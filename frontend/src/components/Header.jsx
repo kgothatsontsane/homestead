@@ -7,6 +7,10 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import Navbar from './Navbar'
 import { MdClose, MdMenu } from 'react-icons/md'
 import { useAuth, useClerk } from "@clerk/clerk-react"
+import { FaSignInAlt, FaUserCircle, FaSignOutAlt } from 'react-icons/fa';
+import { useAuthModal } from '../contexts/AuthModalContext';
+import { UserIcon } from '@heroicons/react/24/outline' // Fix: Update UserIcon import
+import AuthModal from './AuthModal';
 
 const userIcon = new URL('../assets/user.svg', import.meta.url).href
 
@@ -19,9 +23,11 @@ const Header = () => {
   const [active, setActive] = useState(false)
   const [menuOpened, setMenuOpened] = useState(false)
   const [lastScrollY, setLastScrollY] = useState(0)
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const isOnDashboard = location.pathname === '/dashboard';
+  const { openModal } = useAuthModal();
 
   // Performance monitoring for scroll events
   const handleScroll = useCallback(() => {
@@ -85,7 +91,7 @@ const Header = () => {
               {/* Desktop */}
               <Navbar
                 containerStyles={
-                  "hidden xl:flex gap-x-5 xl:gap-x-10  capitalize medium-15 ring-1 ring-slate-900/10 rounded-xl p-2 bg-primary/55 "
+                  "hidden xl:flex gap-x-5 xl:gap-x-10  capitalize medium-15 p-2"
                 }
               />
               {/* Mobile */}
@@ -110,41 +116,25 @@ const Header = () => {
                   className="xl:hidden cursor-pointer text-3xl hover:text-secondary"
                 />
               )}
-              {isSignedIn ? (
-                <>
-                  <button 
-                    onClick={handleDashboard}
-                    className={`${
-                      isOnDashboard 
-                        ? 'bg-gray-900 text-white hover:bg-secondary' // Active: black filled, hover secondary
-                        : 'border border-gray-900 text-gray-900 hover:bg-secondary hover:text-white hover:border-secondary' // Inactive: black outline, hover secondary
-                    } flexCenter gap-x-2 medium-16 rounded-xl px-4 py-2 transition-colors duration-200`}
-                  >
-                    Dashboard
-                  </button>
-                  <button 
-                    onClick={handleLogout}
-                    className="btn-secondary flexCenter gap-x-2 medium-16 rounded-xl"
-                  >
-                    <img src={userIcon} alt="" height={22} width={22} />
-                    <span>Logout {user?.firstName}</span>
-                  </button>
-                </>
-              ) : (
-                <Link 
-                  to="/sign-in"
-                  className="btn-secondary flexCenter gap-x-2 medium-16 rounded-xl"
+              <div className="flex items-center">
+                <button
+                  onClick={() => setIsAuthModalOpen(true)}
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                 >
-                  <img src={userIcon} alt="" height={22} width={22} />
-                  <span>Login</span>
-                </Link>
-              )}
+                  <UserIcon className="h-5 w-5 mr-2" />
+                  Sign In
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <AuthModal 
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+      />
     </header>
-  )
-}
+  );
+};
 
 export default Header

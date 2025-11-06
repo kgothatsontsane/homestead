@@ -39,7 +39,7 @@ const Footer = ({ className }) => {
   return (
     <footer className={`py-10 relative ${className}`}>
       <div className="max-padd-container mb-4">
-        <div className="max-padd-container bg-primary rounded-t-xl pt-12 xl:pt-20 pb-8">
+        <div className="max-padd-container bg-light rounded-t-xl pt-12 xl:pt-20 pb-8">
           <h3 className="h3">Ready to explore our curated properties?</h3>
           <p>
             Are you ready to discover the finest properties tailored to your exquisite taste and lifestyle?
@@ -104,7 +104,7 @@ const Footer = ({ className }) => {
           </div>
         </div>
         {/* Copyright */}
-        <p className='text-white bg-tertiary medium-14 py-2 px-2 rounded-b-xl flexBetween'>
+        <p className='text-white bg-dark medium-14 py-2 px-2 rounded-b-xl flexBetween'>
           <span>&copy; 2025 Homestead</span> All rights reserved
         </p>
       </div>

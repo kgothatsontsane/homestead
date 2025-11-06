@@ -1,17 +1,21 @@
-import { useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import React, { useMemo, useEffect, useCallback } from 'react';
-import { getProperty } from '../utils/api';
-import { PuffLoader } from 'react-spinners';
-import FavButton from '../components/FavButton';
-import {MdOutlineBathtub, MdOutlineBed, MdOutlineGarage} from 'react-icons/md';
-import { useNavigate } from 'react-router-dom';
-import { CgRuler } from 'react-icons/cg';
-import { FaLocationDot } from 'react-icons/fa6';
-import Map from '../components/Map';
-import LoadingSpinner from '../components/LoadingSpinner';
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import React, { useMemo, useEffect, useCallback } from "react";
+import { getProperty } from "../utils/api";
+import { PuffLoader } from "react-spinners";
+import FavButton from "../components/FavButton";
+import {
+  MdOutlineBathtub,
+  MdOutlineBed,
+  MdOutlineGarage,
+} from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import { CgRuler } from "react-icons/cg";
+import { FaLocationDot } from "react-icons/fa6";
+import Map from "../components/Map";
+import LoadingSpinner from "../components/LoadingSpinner";
 
-const Property = () => {
+const ListingDetails = () => {
   const { propertyId } = useParams();
   const navigate = useNavigate();
 
@@ -183,6 +187,6 @@ const Property = () => {
       </div>
     </section>
   );
-}
+};
 
-export default Property;
+export default ListingDetails;

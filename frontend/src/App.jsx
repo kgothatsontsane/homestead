@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ErrorBoundary } from 'react-error-boundary';
 import { LoadingProvider } from './contexts/LoadingContext';
 import LoadingScreen from './components/LoadingScreen';
+import { AuthModalProvider } from './contexts/AuthModalContext';
 
 // Page imports
 import Home from './pages/Home';
@@ -21,6 +22,8 @@ import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import DashboardRouter from './components/DashboardRouter';
 import UserOnboarding from './components/UserOnboarding';
+import ListingDetails from './pages/ListingDetails';
+import RoleCheck from './components/RoleCheck';
 
 // Component imports
 import Layout from './components/Layout';
@@ -38,14 +41,27 @@ const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 const clerkOptions = {
   publishableKey: clerkPubKey,
   appearance: clerkAppearance,
+  signUp: {
+    captcha: {
+      type: 'smart', // or 'invisible'
+      element: '#clerk-captcha'
+    }
+  },
+  signIn: {
+    appearance: clerkAppearance,
+    socialButtonsPlacement: 'top',
+    signUpUrl: '/sign-up',
+  },
   routing: {
-    // New redirect props
-    fallbackRedirectUrl: '/dashboard',
-    forceRedirectUrl: '/onboarding',
-    // Specific path redirects
+    // Skip Clerk's username form
+    afterSignUpUrl: '/onboarding',
+    afterSignInUrl: '/role-check',
+    afterVerify: '/onboarding', // Add this line
+    skipUserProfile: true, // Skip Clerk's profile completion
     paths: {
       signIn: '/sign-in',
-      signUp: '/sign-up'
+      signUp: '/sign-up',
+      verify: '/verify' // Add this line
     }
   }
 };
@@ -98,32 +114,40 @@ export default function App() {
         <ClerkProvider {...clerkOptions}>
           <QueryClientProvider client={queryClient}>
             <BrowserRouter>
-              <LoadingScreen />
-              <ScrollToTop />
-              <Routes>
-                <Route element={<Layout />}>
-                  <Route index element={<Home />} />
-                  <Route path="listings" element={<Listings />} />
-                  <Route path="contact" element={<Contact />} />
-                  <Route path="dashboard/*" 
-                    element={
+              <AuthModalProvider>
+                <ScrollToTop />
+                <LoadingScreen />
+                <Routes>
+                  {/* Auth routes */}
+                  <Route path="sign-in/*" element={<SignInPage />} />
+                  <Route path="sign-up/*" element={<SignUpPage />} />
+                  <Route path="role-check" element={
+                    <SignedIn>
+                      <RoleCheck />
+                    </SignedIn>
+                  } />
+
+                  {/* Protected routes */}
+                  <Route element={<Layout />}>
+                    <Route index element={<Home />} />
+                    <Route path="listings" element={<Listings />} />
+                    <Route path="listings/:id" element={<ListingDetails />} />
+                    <Route path="contact" element={<Contact />} />
+                    <Route path="dashboard/*" element={
                       <SignedIn>
                         <DashboardRouter />
                       </SignedIn>
-                    } 
-                  />
-                  <Route path="onboarding" 
-                    element={
+                    } />
+                    <Route path="onboarding/*" element={
                       <SignedIn>
                         <UserOnboarding />
                       </SignedIn>
-                    } 
-                  />
-                </Route>
-                <Route path="sign-in/*" element={<SignInPage />} />
-                <Route path="sign-up/*" element={<SignUpPage />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
+                    } />
+                  </Route>
+                  
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </AuthModalProvider>
             </BrowserRouter>
           </QueryClientProvider>
         </ClerkProvider>

@@ -29,7 +29,7 @@ const Hero = () => {
   }, [])
 
   return (
-    <section className="max-padd-container pt-[99px]">
+    <section className="max-padd-container">
       <motion.div 
         className="max-padd-container bg-hero bg-center bg-cover bg-no-repeat h-[655px] w-full rounded-xl items-center"
         initial={{ opacity: 0 }}

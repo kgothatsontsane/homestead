@@ -34,10 +34,16 @@ const MaintenanceRequests = () => {
     priority: 'normal',
     unit: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add submission logic
+    setIsSubmitting(true);
+    try {
+      // Add submission logic
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const priorityOptions = [
@@ -119,9 +125,10 @@ const MaintenanceRequests = () => {
           </button>
           <button
             type="submit"
+            disabled={isSubmitting}
             className="btn-primary"
           >
-            Submit Request
+            {isSubmitting ? <LoadingSpinner size={20} /> : 'Submit Request'}
           </button>
         </div>
       </form>
