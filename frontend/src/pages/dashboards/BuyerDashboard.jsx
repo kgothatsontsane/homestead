@@ -1,6 +1,6 @@
 import React from 'react';
 import { useUser } from '@clerk/clerk-react';
-import { BsHouseDoor, BsCalendar, BsChat, BsHeart, BsSearch } from 'react-icons/bs';
+import { BsHouseDoor, BsCalendar, BsChat, BsHeart } from 'react-icons/bs';
 import { MdOutlineHistory } from 'react-icons/md';
 import { getRandomBackground } from '../../utils/backgroundImages';
 
