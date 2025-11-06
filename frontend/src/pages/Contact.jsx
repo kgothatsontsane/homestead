@@ -349,7 +349,6 @@ const Contact = () => {
           formState.errors[field] ? 'border-2 border-red-500' : ''
         }`}
         placeholder={`Enter your ${field}`}
-        style={{ caretColor: 'transparent' }}
       />
       {formState.errors[field] && (
         <p className="text-red-500 text-sm mt-1 cursor-default">{formState.errors[field]}</p>
@@ -506,7 +505,6 @@ const Contact = () => {
                         onChange={handleChange}
                         className="w-full px-4 py-3 bg-blue-500/10 rounded-lg outline-none transition-all duration-300 focus:bg-sky-50 focus:shadow-md font-[500] resize-none placeholder:text-gray-400 cursor-default"
                         placeholder="Enter your message"
-                        style={{ caretColor: 'transparent' }}
                       />
                       {formState.errors.message && (
                         <p className="text-red-500 text-sm mt-1 cursor-default">{formState.errors.message}</p>
