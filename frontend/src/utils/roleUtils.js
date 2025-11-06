@@ -1,4 +1,4 @@
-import { ROLES } from './userRoles';
+import { ROLES, isValidRole } from './userRoles';
 
 export const getUserRole = (user) => {
   if (!user) return ROLES.UNSET;
@@ -16,7 +16,5 @@ export const getUserRole = (user) => {
   return primaryRole;
 };
 
-export const isValidRole = (role) => {
-  const validRoles = ['buyer', 'agent', 'owner'];
-  return validRoles.includes(role);
-};
+// Re-export isValidRole from userRoles for convenience
+export { isValidRole };
