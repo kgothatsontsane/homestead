@@ -1,6 +1,6 @@
 import React from 'react';
 import { useUser } from '@clerk/clerk-react';
-import { FaListAlt, FaUserClock, FaChartLine, FaCalendarAlt, FaUsers, FaCog } from 'react-icons/fa';
+import { FaListAlt, FaChartLine, FaCalendarAlt, FaUsers } from 'react-icons/fa';
 import { getRandomBackground } from '../../utils/backgroundImages';
 
 const StatsCard = ({ title, value, icon: Icon, trend }) => (
