@@ -12,8 +12,6 @@ import { useAuthModal } from '../contexts/AuthModalContext';
 import { UserIcon } from '@heroicons/react/24/outline' // Fix: Update UserIcon import
 import AuthModal from './AuthModal';
 
-const userIcon = new URL('../assets/user.svg', import.meta.url).href
-
 /**
  * Header Component
  * @component
