@@ -1,5 +1,5 @@
 import React from 'react';
-import { useProperties } from './useProperties';
+import useProperties from './useProperties';
 
 // UI/presentation logic hook
 export const usePropertiesUI = () => {
