@@ -3,7 +3,6 @@ import { useAuth, useUser } from '@clerk/clerk-react';
 import AdminDashboard from '../pages/dashboards/AdminDashboard';
 import AgentDashboard from '../pages/dashboards/AgentDashboard';
 import BuyerDashboard from '../pages/dashboards/BuyerDashboard';
-import LoadingScreen from '../components/LoadingScreen';
 import { ROLES } from '../utils/userRoles';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import DashboardLayout from './layouts/DashboardLayout';

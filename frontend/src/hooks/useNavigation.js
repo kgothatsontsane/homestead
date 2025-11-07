@@ -20,8 +20,7 @@ export const useNavigation = () => {
 
       const result = await updateUserRole(
         user?.id,
-        newRole,
-        user?.publicMetadata?.role
+        newRole
       );
 
       console.log('✅ Role upgrade complete:', result);
