@@ -106,10 +106,6 @@ export default function App() {
     ]).catch(console.error);
 
     // Clean up function - Remove the problematic Clerk cleanup
-    return () => {
-      // Clear query cache on unmount
-      queryClient.clear();
-    };
   }, [queryClient]);
 
   return (
