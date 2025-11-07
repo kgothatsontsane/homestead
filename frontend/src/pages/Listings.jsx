@@ -87,7 +87,7 @@ const Listings = () => {
 
   return (
     <main className='max-padd-container my-[99px]'>
-      <div className='max-padd-container py-10 xl:py-22 bg-primary rounded-xl'>
+      <div className='max-padd-container py-10 xl:py-22 bg-light rounded-xl'>
         <div>
           <div className='flex justify-between items-center'>
             <Searchbar />

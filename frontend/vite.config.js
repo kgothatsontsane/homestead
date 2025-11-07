@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => {
       })
     ],
     optimizeDeps: {
-      include: ['react/compiler-runtime']
+      include: ['react/compiler-runtime', '@clerk/clerk-react']
     },
     server: {
       proxy: {
@@ -29,6 +29,17 @@ export default defineConfig(({ mode }) => {
         }
       },
       port: parseInt(env.VITE_PORT)
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            clerk: ['@clerk/clerk-react'],
+            vendor: ['react', 'react-dom', 'react-router-dom'],
+          }
+        }
+      },
+      chunkSizeWarningLimit: 1000
     }
   }
 })

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { VscSettings } from 'react-icons/vsc'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -10,10 +10,26 @@ import useProperties from '../hooks/useProperties'
 import { PuffLoader } from 'react-spinners'
 
 const Properties = () => {
-  const { data, isLoading, isError } = useProperties()
+  const renderCount = useRef(0);
+  const { data, isLoading } = useProperties();
+  
+  // Combine effects into one
+  useEffect(() => {
+    renderCount.current += 1;
+    console.log('[Properties] Render count:', renderCount.current);
+    
+    return () => {
+      console.log('[Properties] Component unmounting');
+    };
+  }, []); // Empty deps array to run only on mount/unmount
 
-  // Memoize the filtered and processed properties
+  // Memoize callbacks
+  const handleSwiperInit = useCallback(() => {
+    console.log('[Properties] Swiper initialized');
+  }, []);
+
   const processedProperties = useMemo(() => {
+    console.log('[Properties] Processing properties data');
     if (!data || !Array.isArray(data)) return [];
     return data
       .filter(property => property && property.facilities)
@@ -24,16 +40,19 @@ const Properties = () => {
       }));
   }, [data]);
 
-  // Memoize the Swiper content
-  const swiperContent = useMemo(() => (
-    processedProperties.map((property) => (
+  // Memoize UI elements that depend on processed data
+  const swiperContent = useMemo(() => {
+    console.log('[Properties] Creating swiper content');
+    return processedProperties.map((property) => (
       <SwiperSlide key={property._id || property.title}>
         <Item property={property} />
       </SwiperSlide>
-    ))
-  ), [processedProperties]);
+    ));
+  }, [processedProperties]);
 
+  // Early return for loading state
   if (isLoading) {
+    console.log('[Properties] Rendering loading state');
     return (
       <div className="flex justify-center items-center h-[400px]">
         <PuffLoader size={60} color={"#123abc"} />
@@ -41,17 +60,10 @@ const Properties = () => {
     );
   }
 
-  if (isError) {
-    return (
-      <div className="max-padd-container py-16">
-        <h3 className="text-center text-red-500">Failed to load properties</h3>
-      </div>
-    );
-  }
-
+  console.log('[Properties] Rendering main content');
   return (
     <section className="max-padd-container">
-      <div className="max-padd-container bg-primary py-16 xl:py-28 rounded-3xl">
+      <div className="max-padd-container bg-light py-16 xl:py-28 rounded-3xl">
         <span className="medium-18">Your Dream Home Awaits</span>
         <h2 className="h2 capitalize">Discover Your Future Home</h2>
         <div className="flexBetween mt-8 mb-6">
@@ -67,6 +79,7 @@ const Properties = () => {
         </div>
         
         <Swiper
+          onInit={handleSwiperInit}
           autoplay={{
             delay: 5000,
             disableOnInteraction: false,
@@ -85,5 +98,8 @@ const Properties = () => {
     </section>
   );
 };
+
+// Add display name for better debugging
+Properties.displayName = 'Properties';
 
 export default React.memo(Properties);

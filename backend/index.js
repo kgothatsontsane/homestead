@@ -15,9 +15,14 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 
+// Add health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 })
 
-app.use('/api/user', userRoute);
+app.use('/', userRoute); // Use root path for user routes
 app.use('/api/property', propertyRoute);

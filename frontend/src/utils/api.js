@@ -9,12 +9,49 @@ if (!baseURL) {
   throw new Error('VITE_API_BASE_URL is not defined in environment variables')
 }
 
+/**
+ * Custom axios instance with advanced configuration
+ * @type {import('axios').AxiosInstance}
+ */
 export const api = axios.create({
   baseURL,
   headers: {
     'Content-Type': 'application/json',
+    'X-Client-Version': '1.0.0',
   },
-})
+  timeout: 15000,
+  timeoutErrorMessage: 'Request took too long to complete',
+  validateStatus: status => status >= 200 && status < 400,
+});
+
+// Request tracking for performance monitoring
+const requestTiming = new Map();
+
+// Add request interceptor
+api.interceptors.request.use(config => {
+  requestTiming.set(config.url, performance.now());
+  return config;
+});
+
+// Add response interceptor
+api.interceptors.response.use(
+  response => {
+    const startTime = requestTiming.get(response.config.url);
+    const duration = performance.now() - startTime;
+    console.log(`[API] ${response.config.method?.toUpperCase()} ${response.config.url} completed in ${duration.toFixed(2)}ms`);
+    requestTiming.delete(response.config.url);
+    return response;
+  },
+  error => {
+    const startTime = requestTiming.get(error.config?.url);
+    if (startTime) {
+      const duration = performance.now() - startTime;
+      console.error(`[API] Request failed after ${duration.toFixed(2)}ms:`, error.message);
+      requestTiming.delete(error.config.url);
+    }
+    return Promise.reject(error);
+  }
+);
 
 /**
  * Fetches all properties from the API
@@ -46,6 +83,7 @@ export const getAllProperties = async () => {
     // Add formatted dates while preserving original dates
     const formattedData = response.data.map(property => ({
       ...property,
+      image: property.image.startsWith('/') ? property.image : `/${property.image}`,
       formattedDates: {
         created: dayjs(property.createdAt).format('DD MMM YYYY'),
         updated: dayjs(property.updatedAt).format('DD MMM YYYY')
@@ -93,7 +131,12 @@ export const getProperty = async (id) => {
       throw response.data;
     }
 
-    return response.data;
+    const data = {
+      ...response.data,
+      image: response.data.image.startsWith('/') ? response.data.image : `/${response.data.image}`
+    };
+
+    return data;
   } catch (error) {
     console.error('[API] Error in getProperties:', {
       name: error.name,
@@ -107,7 +150,7 @@ export const getProperty = async (id) => {
       }
     });
 
-    toast.error(error.response?.data?.message || 'An error occurred whil fetching the property');
+    toast.error(error.response?.data?.message || 'An error occurred while fetching the property');
     throw error;
   }
 }

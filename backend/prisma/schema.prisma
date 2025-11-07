@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["multiSchema", "fullTextSearch"]
 }
 
 datasource db {
@@ -14,19 +15,47 @@ datasource db {
 }
 
 model User {
-  id               String     @id @default(auto()) @map("_id") @db.ObjectId
+  id                String     @id @default(auto()) @map("_id") @db.ObjectId
+  clerkId          String     @unique
   email            String     @unique
-  name             String?
+  username         String     @unique
+  first_name       String
+  last_name        String
+  
+  // Enhanced role management
+  roles            String[]   @default(["unset"])  // All assigned roles
+  primaryRole      String     @default("unset")    // Main role
+  activeRole       String     @default("unset")    // Currently selected role
+  roleHistory      Json[]     // Track role changes and timestamps
+  
+  // Role-specific profiles
+  buyerProfile     Json?      // Buyer preferences, saved searches
+  agentProfile     Json?      // Agent license, listings, ratings
+  ownerProfile     Json?      // Owned properties, documents
+  investorProfile  Json?      // Investment portfolio, preferences
+  tenantProfile    Json?      // Rental history, preferences
+  
+  // Role-based permissions
+  canList          Boolean    @default(false)      // Can create listings
+  canViewAnalytics Boolean    @default(false)      // Can view advanced analytics
+  customPermissions Json?     // Additional role-specific permissions
+  
+  // Standard fields
   image            String?
-  bookedViewings   Json[]
-  favPropertiesID  String[]   @db.ObjectId
+  bookedViewings   Json[]     @default([])
+  favPropertiesID  String[]   @default([]) @db.ObjectId
   ownedProperties  Property[] @relation("Owner")
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
+  lastRoleUpdate   DateTime?
+  onboardingComplete Boolean  @default(false)
+
+  @@index([primaryRole, activeRole, roles])
+  @@map("users")
 }
 
 model Property {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   description String
   price       Int
@@ -34,13 +63,12 @@ model Property {
   image       String
   city        String
   country     String
-  area        Int?    // Make area optional by adding ?
-  facilities  Json[]
+  area        Int?     
+  facilities  Json[]   @default([])
   ownerEmail  String
-  owner       User   @relation("Owner", fields: [ownerEmail], references: [email])
+  owner       User     @relation("Owner", fields: [ownerEmail], references: [email])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique(fields: [address, ownerEmail])
+  @@unique([address, ownerEmail])
 }

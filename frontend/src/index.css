@@ -41,6 +41,79 @@ font-ace {
   background: #ccc;
 }
 
+/* Add these scroll optimization rules */
+html {
+  scroll-behavior: auto !important; /* Disable smooth scroll for native performance */
+  -webkit-overflow-scrolling: touch; /* Enable momentum scrolling on iOS */
+}
+
+/* Add these styles for the map */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  font-family: "Inter", sans-serif;
+}
+
+.custom-marker {
+  background: none;
+  border: none;
+}
+
+.marker-pin {
+  width: 30px;
+  height: 30px;
+  border-radius: 50% 50% 50% 0;
+  background: #3b82f6;
+  position: absolute;
+  transform: rotate(-45deg);
+  left: 50%;
+  top: 50%;
+  margin: -15px 0 0 -15px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.marker-pin::after {
+  content: "";
+  width: 14px;
+  height: 14px;
+  margin: 8px 0 0 8px;
+  background: white;
+  position: absolute;
+  border-radius: 50%;
+}
+
+.custom-popup .leaflet-popup-content-wrapper {
+  background: white;
+  color: #333;
+  border-radius: 8px;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.1);
+}
+
+.custom-popup .leaflet-popup-tip {
+  background: white;
+}
+
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+.leaflet-control-zoom a {
+  background: white !important;
+  color: #666 !important;
+  border: none !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: #f8f8f8 !important;
+}
+
+/* Add these styles to your global CSS */
+.loading-screen {
+  isolation: isolate;
+  z-index: 9999;
+}
+
 @layer base {
   .active-link {
     @apply bg-secondary text-white;
@@ -97,6 +170,9 @@ font-ace {
 
   .max-padd-container {
     @apply mx-auto max-w-[1440px] px-6 lg:px-12;
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
   .flexCenter {
@@ -113,6 +189,11 @@ font-ace {
 
   .flexEnd {
     @apply flex items-center justify-end;
+  }
+
+  .fixed {
+    will-change: transform;
+    transform: translateZ(0);
   }
 
   /* FONTS */
@@ -282,5 +363,22 @@ font-ace {
 
   .bold-15 {
     @apply text-[15px] font-[700];
+  }
+
+  /* Update existing button utilities */
+  .nav-button-base {
+    @apply rounded-lg px-4 py-2 transition-all duration-200 font-medium text-sm;
+  }
+
+  .nav-button-default {
+    @apply nav-button-base text-gray-700 hover:bg-gray-100;
+  }
+
+  .nav-button-primary {
+    @apply nav-button-base bg-secondary text-white hover:bg-tertiary;
+  }
+
+  .nav-button-outline {
+    @apply nav-button-base border border-secondary text-secondary hover:bg-secondary hover:text-white;
   }
 }
