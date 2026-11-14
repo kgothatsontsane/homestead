@@ -5,6 +5,19 @@ import { toast } from 'react-toastify'
 // @ts-ignore
 const baseURL = import.meta.env.VITE_API_BASE_URL
 
+// Map DB image paths (e.g. "src/assets/img8.png") to bundled assets.
+// In production the files are hashed under /assets/, so raw paths 404.
+const assetImages = import.meta.glob('../assets/*.{png,jpg,jpeg,webp,svg}', {
+  eager: true,
+  import: 'default',
+})
+
+const resolveImage = img => {
+  if (!img) return undefined
+  if (/^https?:/.test(img)) return img
+  return assetImages[`../assets/${img.split('/').pop()}`] ?? img
+}
+
 if (!baseURL) {
   throw new Error('VITE_API_BASE_URL is not defined in environment variables')
 }
@@ -83,7 +96,7 @@ export const getAllProperties = async () => {
     // Add formatted dates while preserving original dates
     const formattedData = response.data.map(property => ({
       ...property,
-      image: property.image.startsWith('/') ? property.image : `/${property.image}`,
+      image: resolveImage(property.image),
       formattedDates: {
         created: dayjs(property.createdAt).format('DD MMM YYYY'),
         updated: dayjs(property.updatedAt).format('DD MMM YYYY')
@@ -133,7 +146,7 @@ export const getProperty = async (id) => {
 
     const data = {
       ...response.data,
-      image: response.data.image.startsWith('/') ? response.data.image : `/${response.data.image}`
+      image: resolveImage(response.data.image)
     };
 
     return data;
