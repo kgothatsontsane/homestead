@@ -20,9 +20,9 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+app.use('/', userRoute); // Use root path for user routes
+app.use('/api/property', propertyRoute);
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 })
-
-app.use('/', userRoute); // Use root path for user routes
-app.use('/api/property', propertyRoute);

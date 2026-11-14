@@ -1,4 +1,5 @@
 import express from 'express';
+import { clerkClient } from '@clerk/clerk-sdk-node';
 import { 
   createUser, 
   bookViewing, 
@@ -22,7 +23,6 @@ router.post("/favProperties/:rid", favProperties)
 router.post("/allFavProperties/", allFavProperties)
 
 // Add new route for user role management
-router.post("/updateRole/:userId", updateUserMetadata);
 router.post('/updateRole/:userId', updateUserRole);
 
 // Add new routes for role verification

@@ -1,6 +1,4 @@
-# This workflow will do a installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
+# CI: install dependencies, validate the Prisma schema, and build the frontend
 name: Node.js CI
 
 on:
@@ -9,20 +7,16 @@ on:
   pull_request:
 
 jobs:
-  cache-install-build:
+  frontend:
     runs-on: ubuntu-latest
-
     steps:
-        
       - name: Checkout
         uses: actions/checkout@v4
-
 
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
-          version: 9
-          run_install: true
+          version: 10
 
       - name: Install Node.js
         uses: actions/setup-node@v4
@@ -31,14 +25,40 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: 'frontend/pnpm-lock.yaml'
 
-
-        
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
         working-directory: ./frontend
 
-      - name: Builld App
+      - name: Build App
         run: pnpm run build
         working-directory: ./frontend
 
-        
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 10
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          cache-dependency-path: 'backend/pnpm-lock.yaml'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: ./backend
+
+      - name: Validate Prisma schema
+        run: pnpm exec prisma validate
+        working-directory: ./backend
+
+      - name: Generate Prisma client
+        run: pnpm exec prisma generate
+        working-directory: ./backend
