@@ -23,6 +23,11 @@ app.get('/health', (req, res) => {
 app.use('/', userRoute); // Use root path for user routes
 app.use('/api/property', propertyRoute);
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-})
+// Only bind a port outside serverless (Vercel)
+if (!process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    })
+}
+
+export default app;
