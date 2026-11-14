@@ -16,12 +16,13 @@ import Map from "../components/Map";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 const ListingDetails = () => {
-  const { propertyId } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const { data: property, isLoading, error } = useQuery({
-    queryKey: ['property', propertyId],
-    queryFn: () => getProperty(propertyId),
+    queryKey: ['property', id],
+    queryFn: () => getProperty(id),
+    enabled: Boolean(id),
   });
 
   const logState = useMemo(() => {
