@@ -20,6 +20,10 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+app.get('/', (req, res) => {
+  res.json({ name: 'Homestead API', health: '/health', properties: '/api/property/allproperties' });
+});
+
 app.use('/', userRoute); // Use root path for user routes
 app.use('/api/property', propertyRoute);
 
