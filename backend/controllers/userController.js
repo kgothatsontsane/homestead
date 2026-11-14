@@ -1,27 +1,40 @@
 import { isValid, parse } from "date-fns";
 import asyncHandler from "express-async-handler";
+import { clerkClient } from "@clerk/clerk-sdk-node";
 import { prisma } from "../config/prismaConfig.js";
 
 // Function to create a new user
 export const createUser = asyncHandler(async (req, res) => {
   console.log("Creating a user");
 
-  let { email, password, name } = req.body;
+  const { email, name, clerkId, username } = req.body;
 
-  // Validate and sanitize input
-  if (!email || !password || !name) {
-    return res.status(400).json({ message: "All fields are required" });
+  // Schema requires: clerkId, email, username, first_name, last_name
+  if (!email || !name || !clerkId) {
+    return res
+      .status(400)
+      .json({ message: "email, name and clerkId are required" });
   }
+
+  const parts = name.trim().split(" ");
 
   try {
     const userExists = await prisma.user.findUnique({ where: { email } });
     if (!userExists) {
       const user = await prisma.user.create({
-        data: { email, password, name },
+        data: {
+          email,
+          clerkId,
+          username: username || email.split("@")[0],
+          first_name: parts[0],
+          last_name: parts.slice(1).join(" ") || "N/A",
+        },
         select: {
           id: true,
           email: true,
-          name: true,
+          username: true,
+          first_name: true,
+          last_name: true,
           createdAt: true,
           updatedAt: true,
         },
