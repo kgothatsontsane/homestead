@@ -128,6 +128,7 @@ export default function App() {
             </BrowserRouter>
           </QueryClientProvider>
         </ClerkProvider>
+        <ToastContainer position="top-right" autoClose={5000} />
       </LoadingProvider>
     </ErrorBoundary>
   );
