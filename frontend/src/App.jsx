@@ -41,29 +41,6 @@ const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 const clerkOptions = {
   publishableKey: clerkPubKey,
   appearance: clerkAppearance,
-  signUp: {
-    captcha: {
-      type: 'smart', // or 'invisible'
-      element: '#clerk-captcha'
-    }
-  },
-  signIn: {
-    appearance: clerkAppearance,
-    socialButtonsPlacement: 'top',
-    signUpUrl: '/sign-up',
-  },
-  routing: {
-    // Skip Clerk's username form
-    afterSignUpUrl: '/onboarding',
-    afterSignInUrl: '/role-check',
-    afterVerify: '/onboarding', // Add this line
-    skipUserProfile: true, // Skip Clerk's profile completion
-    paths: {
-      signIn: '/sign-in',
-      signUp: '/sign-up',
-      verify: '/verify' // Add this line
-    }
-  }
 };
 
 // Custom query client configuration

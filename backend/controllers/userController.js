@@ -514,18 +514,32 @@ export const updateUserRole = async (req, res) => {
 export const syncUserData = async (req, res) => {
   const { clerkId, roles, primaryRole, ...userData } = req.body;
 
+  // Prisma schema expects snake_case names and unique email/username
+  const {
+    firstName: _f, lastName: _l, email: _e, username: _u,
+    first_name, last_name, email, username, ...rest
+  } = userData;
+
+  const profile = {
+    ...rest,
+    first_name: first_name || _f || '',
+    last_name: last_name || _l || '',
+    email: email || _e || `${clerkId}@pending.local`, // ponytail: placeholder only if client never sent email
+    username: username || _u || clerkId
+  };
+
   try {
     const user = await prisma.user.upsert({
       where: { clerkId },
       update: {
-        ...userData,
+        ...profile,
         roles,
         primaryRole,
         updatedAt: new Date()
       },
       create: {
         clerkId,
-        ...userData,
+        ...profile,
         roles,
         primaryRole
       }
