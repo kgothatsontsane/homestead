@@ -47,6 +47,7 @@ const SignUpForm = ({ onClose, onSwitchMode }) => {
       }
     } catch (error) {
       setIsSubmitting(false);
+      console.error('Sign up error:', error);
       toast.error(error?.errors?.[0]?.message || error.message || 'Sign up failed');
     }
   };
@@ -66,6 +67,7 @@ const SignUpForm = ({ onClose, onSwitchMode }) => {
         toast.error('Invalid verification code, please try again');
       }
     } catch (error) {
+      console.error('Verification error:', error);
       toast.error(error?.errors?.[0]?.message || error.message || 'Verification failed');
     }
     setIsSubmitting(false);
