@@ -31,7 +31,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           className="w-full max-w-md relative"
         >
           {/* Add glowing effect behind the form */}
-          <div className="absolute inset-0 bg-primary/20 blur-xl rounded-3xl" />
+          <div className="absolute inset-0 bg-primary/20 blur-xl rounded-3xl pointer-events-none" />
           
           <AnimatePresence mode="wait">
             {authMode === 'signin' ? (

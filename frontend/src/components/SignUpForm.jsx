@@ -9,6 +9,7 @@ const SignUpForm = ({ onClose, onSwitchMode }) => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [verifying, setVerifying] = useState(false); // Add verifying state
+  const [code, setCode] = useState('');
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -40,27 +41,75 @@ const SignUpForm = ({ onClose, onSwitchMode }) => {
         await setActive({ session: result.createdSessionId });
         navigate('/onboarding');
       } else {
-        setVerifying(true); // Set verifying to true when verification starts
-        const verification = await signUp.prepareEmailAddressVerification();
-        const code = prompt('Please enter the verification code from your email:');
-        
-        if (code) {
-          const completeSignUp = await signUp.attemptEmailAddressVerification({
-            code,
-          });
-          
-          if (completeSignUp.status === 'complete') {
-            await setActive({ session: completeSignUp.createdSessionId });
-            navigate('/onboarding');
-          }
-        }
-        setVerifying(false); // Set verifying to false when verification ends
+        await signUp.prepareEmailAddressVerification();
+        setVerifying(true);
+        setIsSubmitting(false);
       }
     } catch (error) {
-      setVerifying(false); // Set verifying to false on error
       setIsSubmitting(false);
+      toast.error(error?.errors?.[0]?.message || error.message || 'Sign up failed');
     }
   };
+
+  const handleVerify = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const completeSignUp = await signUp.attemptEmailAddressVerification({
+        code,
+      });
+
+      if (completeSignUp.status === 'complete') {
+        await setActive({ session: completeSignUp.createdSessionId });
+        navigate('/onboarding');
+      } else {
+        toast.error('Invalid verification code, please try again');
+      }
+    } catch (error) {
+      toast.error(error?.errors?.[0]?.message || error.message || 'Verification failed');
+    }
+    setIsSubmitting(false);
+  };
+
+  if (verifying) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-slate-900 p-8 rounded-2xl shadow-2xl border border-slate-700"
+      >
+        <h2 className="text-center text-3xl font-bold text-white mb-2">
+          Verify your email
+        </h2>
+        <p className="text-center text-sm text-gray-300 mb-8">
+          We sent a verification code to {formData.email}
+        </p>
+        <form className="space-y-6" onSubmit={handleVerify}>
+          <input
+            id="verification-code"
+            required
+            type="text"
+            inputMode="numeric"
+            value={code}
+            onChange={(e) => setCode(e.target.value.trim())}
+            className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-lg 
+              text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary 
+              focus:border-transparent transition-colors tracking-[0.4em] text-center"
+            placeholder="123456"
+            maxLength={6}
+          />
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full py-3 px-4 bg-primary text-white rounded-lg font-medium
+              hover:bg-primary/90 disabled:opacity-50 transition-all"
+          >
+            {isSubmitting ? 'Verifying...' : 'Verify Email'}
+          </button>
+        </form>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div 
